@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Model>
+    <Entity name="Teacher">
+        <AttributeList>
+            <Attribute name="TeacherID">
+                <type>BtInt32</type>
+                <nullable>false</nullable>
+            </Attribute>
+            <Attribute name="TeacherID">
+                <type>BtInt32</type>
+                <nullable>false</nullable>
+            </Attribute>
+        </AttributeList>
+    </Entity>
+</Model>
