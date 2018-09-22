@@ -62,6 +62,7 @@ package net.milanqiu.enceladus.datatype;
  *             BtDomainStandard
  *                 BtUuid
  *     AggregationType
+ *         AtBundle
  *         AtObject
  *     CollectionType
  *         CtArray

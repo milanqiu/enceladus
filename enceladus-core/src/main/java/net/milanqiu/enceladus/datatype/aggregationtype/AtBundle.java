@@ -8,10 +8,10 @@ import java.util.Map;
 
 /**
  * <p>
- * Creation Date: 2017-04-17
+ * Creation Date: 2018-09-22
  * @author Milan Qiu
  */
-public class AtObject extends AggregationType {
+public class AtBundle extends AggregationType {
 
     protected LinkedHashMap<String, DataType> properties;
 
@@ -19,7 +19,7 @@ public class AtObject extends AggregationType {
         return Collections.unmodifiableMap(properties);
     }
 
-    public AtObject(LinkedHashMap<String, DataType> properties) {
+    public AtBundle(LinkedHashMap<String, DataType> properties) {
         this.properties = new LinkedHashMap<>(properties);
     }
 
@@ -28,9 +28,9 @@ public class AtObject extends AggregationType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AtObject atObject = (AtObject) o;
+        AtBundle atBundle = (AtBundle) o;
 
-        return !(properties != null ? !properties.equals(atObject.properties) : atObject.properties != null);
+        return !(properties != null ? !properties.equals(atBundle.properties) : atBundle.properties != null);
     }
 
     @Override
