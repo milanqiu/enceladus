@@ -15,4 +15,19 @@ public abstract class BtDomainString extends BtDomainChar {
     protected void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BtDomainString that = (BtDomainString) o;
+
+        return maxLength == that.maxLength;
+    }
+
+    @Override
+    public int hashCode() {
+        return maxLength;
+    }
 }

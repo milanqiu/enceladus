@@ -18,4 +18,19 @@ public class AtList extends AggregationType {
     public AtList(DataType elementType) {
         this.elementType = elementType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AtList atList = (AtList) o;
+
+        return !(elementType != null ? !elementType.equals(atList.elementType) : atList.elementType != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return elementType != null ? elementType.hashCode() : 0;
+    }
 }

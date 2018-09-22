@@ -22,4 +22,19 @@ public class AtObject extends AggregationType {
     public AtObject(LinkedHashMap<String, DataType> properties) {
         this.properties = new LinkedHashMap<>(properties);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AtObject atObject = (AtObject) o;
+
+        return !(properties != null ? !properties.equals(atObject.properties) : atObject.properties != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return properties != null ? properties.hashCode() : 0;
+    }
 }

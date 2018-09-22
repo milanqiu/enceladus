@@ -22,4 +22,21 @@ public abstract class BtDomainDecimal extends BtDomainNumber {
     protected void setScale(int scale) {
         this.scale = scale;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BtDomainDecimal that = (BtDomainDecimal) o;
+
+        return precision == that.precision && scale == that.scale;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = precision;
+        result = 31 * result + scale;
+        return result;
+    }
 }

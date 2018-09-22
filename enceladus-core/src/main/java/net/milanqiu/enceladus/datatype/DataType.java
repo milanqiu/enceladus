@@ -74,9 +74,10 @@ package net.milanqiu.enceladus.datatype;
 public abstract class DataType {
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        return getClass() == obj.getClass();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        return true;
     }
 }

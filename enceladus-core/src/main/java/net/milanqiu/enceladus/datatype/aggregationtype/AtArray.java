@@ -18,4 +18,19 @@ public class AtArray extends AggregationType {
     public AtArray(DataType elementType) {
         this.elementType = elementType;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AtArray atArray = (AtArray) o;
+
+        return !(elementType != null ? !elementType.equals(atArray.elementType) : atArray.elementType != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return elementType != null ? elementType.hashCode() : 0;
+    }
 }

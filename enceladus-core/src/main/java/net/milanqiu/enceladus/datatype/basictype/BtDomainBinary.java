@@ -15,4 +15,19 @@ public abstract class BtDomainBinary extends BtDomainByte {
     protected void setMaxLength(int maxLength) {
         this.maxLength = maxLength;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BtDomainBinary that = (BtDomainBinary) o;
+
+        return maxLength == that.maxLength;
+    }
+
+    @Override
+    public int hashCode() {
+        return maxLength;
+    }
 }
