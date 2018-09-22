@@ -62,10 +62,11 @@ package net.milanqiu.enceladus.datatype;
  *             BtDomainStandard
  *                 BtUuid
  *     AggregationType
- *         AtArray
- *         AtList
- *         AtMap
  *         AtObject
+ *     CollectionType
+ *         CtArray
+ *         CtList
+ *         CtMap
  * </tt></pre>
  * <p>
  * Creation Date: 2017-04-17

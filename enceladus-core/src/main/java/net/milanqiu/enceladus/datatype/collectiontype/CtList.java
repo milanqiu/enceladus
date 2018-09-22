@@ -1,4 +1,4 @@
-package net.milanqiu.enceladus.datatype.aggregationtype;
+package net.milanqiu.enceladus.datatype.collectiontype;
 
 import net.milanqiu.enceladus.datatype.DataType;
 
@@ -7,7 +7,7 @@ import net.milanqiu.enceladus.datatype.DataType;
  * Creation Date: 2017-04-17
  * @author Milan Qiu
  */
-public class AtList extends AggregationType {
+public class CtList extends CollectionType {
 
     private DataType elementType;
 
@@ -15,7 +15,7 @@ public class AtList extends AggregationType {
         return elementType;
     }
 
-    public AtList(DataType elementType) {
+    public CtList(DataType elementType) {
         this.elementType = elementType;
     }
 
@@ -24,9 +24,9 @@ public class AtList extends AggregationType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AtList atList = (AtList) o;
+        CtList ctList = (CtList) o;
 
-        return !(elementType != null ? !elementType.equals(atList.elementType) : atList.elementType != null);
+        return !(elementType != null ? !elementType.equals(ctList.elementType) : ctList.elementType != null);
     }
 
     @Override

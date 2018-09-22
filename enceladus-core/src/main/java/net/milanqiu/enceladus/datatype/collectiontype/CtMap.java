@@ -1,4 +1,4 @@
-package net.milanqiu.enceladus.datatype.aggregationtype;
+package net.milanqiu.enceladus.datatype.collectiontype;
 
 import net.milanqiu.enceladus.datatype.DataType;
 
@@ -7,7 +7,7 @@ import net.milanqiu.enceladus.datatype.DataType;
  * Creation Date: 2017-04-17
  * @author Milan Qiu
  */
-public class AtMap extends AggregationType {
+public class CtMap extends CollectionType {
 
     private DataType keyType;
     private DataType valueType;
@@ -19,7 +19,7 @@ public class AtMap extends AggregationType {
         return valueType;
     }
 
-    public AtMap(DataType keyType, DataType valueType) {
+    public CtMap(DataType keyType, DataType valueType) {
         this.keyType = keyType;
         this.valueType = valueType;
     }
@@ -29,10 +29,10 @@ public class AtMap extends AggregationType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AtMap atMap = (AtMap) o;
+        CtMap ctMap = (CtMap) o;
 
-        if (keyType != null ? !keyType.equals(atMap.keyType) : atMap.keyType != null) return false;
-        if (valueType != null ? !valueType.equals(atMap.valueType) : atMap.valueType != null) return false;
+        if (keyType != null ? !keyType.equals(ctMap.keyType) : ctMap.keyType != null) return false;
+        if (valueType != null ? !valueType.equals(ctMap.valueType) : ctMap.valueType != null) return false;
 
         return true;
     }
