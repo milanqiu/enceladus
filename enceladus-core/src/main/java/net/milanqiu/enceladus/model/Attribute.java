@@ -14,7 +14,7 @@ public class Attribute {
 
     private Entity owner;
 
-    private String name;
+    private String name = "";
     private DataType type = new BtInt32();
     private boolean nullable = true;
     private String description = "";
@@ -31,7 +31,7 @@ public class Attribute {
     }
     public void setName(String name) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
-        if (name.equals(this.name))
+        if (this.name.equals(name))
             return;
         owner.checkAttributeName(name);
         this.name = name;

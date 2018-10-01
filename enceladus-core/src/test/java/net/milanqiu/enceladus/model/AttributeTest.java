@@ -1,6 +1,5 @@
 package net.milanqiu.enceladus.model;
 
-import net.milanqiu.mimas.instrumentation.DebugUtils;
 import net.milanqiu.mimas.junit.AssertExt;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,16 +18,16 @@ public class AttributeTest {
     public void setUp() throws Exception {
         model = new Model();
         model.newEntity("e1");
-        model.getEntities().get(0).newAttribute("a1");
-        model.getEntities().get(0).newAttribute("a2");
+        model.getEntity("e1").newAttribute("a1");
+        model.getEntity("e1").newAttribute("a2");
         model.newEntity("e2");
-        model.getEntities().get(1).newAttribute("a1");
-        model.getEntities().get(1).newAttribute("a3");
+        model.getEntity("e2").newAttribute("a1");
+        model.getEntity("e2").newAttribute("a3");
     }
 
     @Test
     public void test_setName() throws Exception {
-        Attribute attribute = model.getEntities().get(0).getAttributes().get(1);
+        Attribute attribute = model.getEntity("e1").getAttribute("a2");
         attribute.setName("a4");
         Assert.assertEquals("a4", attribute.getName());
         attribute.setName("a3");
@@ -36,12 +35,7 @@ public class AttributeTest {
         attribute.setName("a3");
         Assert.assertEquals("a3", attribute.getName());
 
-        try {
-            attribute.setName("a1");
-            DebugUtils.neverGoesHere();
-        } catch (Exception e) {
-            AssertExt.assertClassification(IllegalArgumentException.class, e);
-            Assert.assertEquals("attribute name a1 already exists", e.getMessage());
-        }
+        AssertExt.assertExceptionThrown(() -> attribute.setName("a1"),
+                IllegalArgumentException.class, "attribute name a1 already exists");
     }
 }

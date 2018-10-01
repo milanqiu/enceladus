@@ -1,6 +1,5 @@
 package net.milanqiu.enceladus.model;
 
-import net.milanqiu.mimas.instrumentation.DebugUtils;
 import net.milanqiu.mimas.junit.AssertExt;
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,25 +18,18 @@ public class ModelTest {
     public void setUp() throws Exception {
         model = new Model();
         model.newEntity("e1");
-        model.getEntities().get(0).newAttribute("a1");
-        model.getEntities().get(0).newAttribute("a2");
+        model.getEntity("e1").newAttribute("a1");
+        model.getEntity("e1").newAttribute("a2");
         model.newEntity("e2");
-        model.getEntities().get(1).newAttribute("a1");
-        model.getEntities().get(1).newAttribute("a3");
+        model.getEntity("e2").newAttribute("a1");
+        model.getEntity("e2").newAttribute("a3");
     }
 
     @Test
-    public void test_indexOfEntity() throws Exception {
-        Assert.assertEquals(0, model.indexOfEntity("e1"));
-        Assert.assertEquals(1, model.indexOfEntity("e2"));
-        Assert.assertEquals(-1, model.indexOfEntity("e3"));
-    }
-
-    @Test
-    public void test_findEntity() throws Exception {
-        Assert.assertEquals(model.getEntities().get(0), model.findEntity("e1"));
-        Assert.assertEquals(model.getEntities().get(1), model.findEntity("e2"));
-        Assert.assertEquals(null, model.findEntity("e3"));
+    public void test_getEntity() throws Exception {
+        Assert.assertEquals(model.getEntities().get(0), model.getEntity("e1"));
+        Assert.assertEquals(model.getEntities().get(1), model.getEntity("e2"));
+        Assert.assertEquals(null, model.getEntity("e3"));
     }
 
     @Test
@@ -52,12 +44,7 @@ public class ModelTest {
         Assert.assertEquals("", model.getEntities().get(2).getDescription());
         Assert.assertEquals(0, model.getEntities().get(2).getAttributes().size());
 
-        try {
-            model.newEntity("e1");
-            DebugUtils.neverGoesHere();
-        } catch (Exception e) {
-            AssertExt.assertClassification(IllegalArgumentException.class, e);
-            Assert.assertEquals("entity name e1 already exists", e.getMessage());
-        }
+        AssertExt.assertExceptionThrown(() -> { model.newEntity("e1"); },
+                IllegalArgumentException.class, "entity name e1 already exists");
     }
 }

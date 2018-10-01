@@ -2,6 +2,7 @@ package net.milanqiu.enceladus.model;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ public class Entity {
 
     private Model owner;
 
-    private String name;
+    private String name = "";
     private String description = "";
 
     private List<Attribute> attributes = new LinkedList<>();
@@ -33,7 +34,7 @@ public class Entity {
     }
     public void setName(String name) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
-        if (name.equals(this.name))
+        if (this.name.equals(name))
             return;
         owner.checkEntityName(name);
         this.name = name;
@@ -50,31 +51,17 @@ public class Entity {
         return Collections.unmodifiableList(attributes);
     }
 
+    public Attribute getAttribute(String attributeName) {
+        return Iterables.find(attributes, attribute -> attribute.getName().equals(attributeName), null);
+    }
+
     Entity(Model owner, String name) {
         setOwner(owner);
         setName(name);
     }
 
     void checkAttributeName(String attributeName) {
-        Preconditions.checkArgument(findAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
-    }
-
-    public int indexOfAttribute(Attribute attribute) {
-        return attributes.indexOf(attribute);
-    }
-
-    public int indexOfAttribute(String attributeName) {
-        for (int i = 0; i < attributes.size(); i++)
-            if (attributes.get(i).getName().equals(attributeName))
-                return i;
-        return -1;
-    }
-
-    public Attribute findAttribute(String attributeName) {
-        for (Attribute attribute : attributes)
-            if (attribute.getName().equals(attributeName))
-                return attribute;
-        return null;
+        Preconditions.checkArgument(getAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
     }
 
     public Attribute newAttribute(String attributeName) {
