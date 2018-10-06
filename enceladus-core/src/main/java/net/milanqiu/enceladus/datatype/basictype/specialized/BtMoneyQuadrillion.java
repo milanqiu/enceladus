@@ -1,5 +1,6 @@
 package net.milanqiu.enceladus.datatype.basictype.specialized;
 
+import net.milanqiu.enceladus.datatype.Specialized;
 import net.milanqiu.enceladus.datatype.basictype.BtMoney;
 
 /**
@@ -7,7 +8,7 @@ import net.milanqiu.enceladus.datatype.basictype.BtMoney;
  * Creation Date: 2017-04-17
  * @author Milan Qiu
  */
-public class BtMoneyQuadrillion extends BtMoney {
+public class BtMoneyQuadrillion extends BtMoney implements Specialized {
 
     public BtMoneyQuadrillion(int scale) {
         super(15+scale, scale);

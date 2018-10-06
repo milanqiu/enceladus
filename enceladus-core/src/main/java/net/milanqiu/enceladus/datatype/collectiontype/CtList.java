@@ -2,6 +2,8 @@ package net.milanqiu.enceladus.datatype.collectiontype;
 
 import net.milanqiu.enceladus.datatype.DataType;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Creation Date: 2017-04-17
@@ -9,7 +11,7 @@ import net.milanqiu.enceladus.datatype.DataType;
  */
 public class CtList extends CollectionType {
 
-    private DataType elementType;
+    protected DataType elementType;
 
     public DataType getElementType() {
         return elementType;
@@ -21,12 +23,15 @@ public class CtList extends CollectionType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CtList ctList = (CtList) o;
-
-        return !(elementType != null ? !elementType.equals(ctList.elementType) : ctList.elementType != null);
+        switch (precheckEqual(o)) {
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            default:
+                CtList that = (CtList) o;
+                return Objects.equals(elementType, that.elementType);
+        }
     }
 
     @Override

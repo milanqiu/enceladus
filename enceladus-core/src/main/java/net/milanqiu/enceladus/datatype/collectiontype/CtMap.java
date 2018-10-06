@@ -2,6 +2,8 @@ package net.milanqiu.enceladus.datatype.collectiontype;
 
 import net.milanqiu.enceladus.datatype.DataType;
 
+import java.util.Objects;
+
 /**
  * <p>
  * Creation Date: 2017-04-17
@@ -9,8 +11,8 @@ import net.milanqiu.enceladus.datatype.DataType;
  */
 public class CtMap extends CollectionType {
 
-    private DataType keyType;
-    private DataType valueType;
+    protected DataType keyType;
+    protected DataType valueType;
 
     public DataType getKeyType() {
         return keyType;
@@ -26,15 +28,15 @@ public class CtMap extends CollectionType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CtMap ctMap = (CtMap) o;
-
-        if (keyType != null ? !keyType.equals(ctMap.keyType) : ctMap.keyType != null) return false;
-        if (valueType != null ? !valueType.equals(ctMap.valueType) : ctMap.valueType != null) return false;
-
-        return true;
+        switch (precheckEqual(o)) {
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            default:
+                CtMap that = (CtMap) o;
+                return Objects.equals(keyType, that.keyType) && Objects.equals(valueType, that.valueType);
+        }
     }
 
     @Override

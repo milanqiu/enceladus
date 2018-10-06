@@ -18,12 +18,15 @@ public abstract class BtDomainBinary extends BtDomainByte {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BtDomainBinary that = (BtDomainBinary) o;
-
-        return maxLength == that.maxLength;
+        switch (precheckEqual(o)) {
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            default:
+                BtDomainBinary that = (BtDomainBinary) o;
+                return maxLength == that.maxLength;
+        }
     }
 
     @Override

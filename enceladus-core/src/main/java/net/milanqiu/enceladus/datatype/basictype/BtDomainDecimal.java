@@ -25,12 +25,15 @@ public abstract class BtDomainDecimal extends BtDomainNumber {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BtDomainDecimal that = (BtDomainDecimal) o;
-
-        return precision == that.precision && scale == that.scale;
+        switch (precheckEqual(o)) {
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            default:
+                BtDomainDecimal that = (BtDomainDecimal) o;
+                return precision == that.precision && scale == that.scale;
+        }
     }
 
     @Override

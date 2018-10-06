@@ -1,5 +1,7 @@
 package net.milanqiu.enceladus.datatype;
 
+import net.milanqiu.mimas.lang.TristateBoolean;
+
 /**
  * <pre><tt>
  * DataType
@@ -75,11 +77,30 @@ package net.milanqiu.enceladus.datatype;
  */
 public abstract class DataType {
 
+    protected Class<?> getUnspecializedClass() {
+        if (this instanceof Specialized)
+            return getClass().getSuperclass();
+        else
+            return getClass();
+    }
+
+    protected TristateBoolean precheckEqual(Object o) {
+        if (this == o) return TristateBoolean.TRUE;
+        if (o == null) return TristateBoolean.FALSE;
+        if (!(o instanceof DataType)) return TristateBoolean.FALSE;
+        if (getUnspecializedClass() != ((DataType) o).getUnspecializedClass()) return TristateBoolean.FALSE;
+        return TristateBoolean.THIRD_STATE;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        return true;
+        switch (precheckEqual(o)) {
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            default:
+                return true;
+        }
     }
 }

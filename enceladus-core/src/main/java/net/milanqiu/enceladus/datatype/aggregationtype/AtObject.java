@@ -5,6 +5,7 @@ import net.milanqiu.enceladus.datatype.DataType;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * <p>
@@ -25,12 +26,15 @@ public class AtObject extends AggregationType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AtObject atObject = (AtObject) o;
-
-        return !(properties != null ? !properties.equals(atObject.properties) : atObject.properties != null);
+        switch (precheckEqual(o)) {
+            case TRUE:
+                return true;
+            case FALSE:
+                return false;
+            default:
+                AtObject that = (AtObject) o;
+                return Objects.equals(properties, that.properties);
+        }
     }
 
     @Override
