@@ -32,6 +32,10 @@ public class Entity {
     private String nameAttributeName = "Name";
     private BtDomainChar nameAttributeType = new BtString50();
 
+    private boolean isTree = false;
+    public static final String PARENT_ATTRIBUTE_NAME = "ParentId";
+    public static final String LEVEL_ATTRIBUTE_NAME = "TreeLevel";
+
     public Model getOwner() {
         return owner;
     }
@@ -90,6 +94,13 @@ public class Entity {
     }
     public void setNameAttributeType(BtDomainChar nameAttributeType) {
         this.nameAttributeType = nameAttributeType;
+    }
+
+    public boolean isTree() {
+        return isTree;
+    }
+    public void setIsTree(boolean isTree) {
+        this.isTree = isTree;
     }
 
     Entity(Model owner, String name) {

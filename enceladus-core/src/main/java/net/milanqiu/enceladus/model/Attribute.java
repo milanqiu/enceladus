@@ -65,5 +65,7 @@ public class Attribute {
         Preconditions.checkArgument(owner.getAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getIdAttributeName()), "attribute name %s is reserved", owner.getIdAttributeName());
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getNameAttributeName()), "attribute name %s is reserved", owner.getNameAttributeName());
+        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.PARENT_ATTRIBUTE_NAME), "attribute name %s is reserved", Entity.PARENT_ATTRIBUTE_NAME);
+        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.LEVEL_ATTRIBUTE_NAME), "attribute name %s is reserved", Entity.LEVEL_ATTRIBUTE_NAME);
     }
 }
