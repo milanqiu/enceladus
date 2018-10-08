@@ -1,6 +1,5 @@
 package net.milanqiu.enceladus.model;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 
 import java.util.Collections;
@@ -19,7 +18,6 @@ public class Model {
     public List<Entity> getEntities() {
         return Collections.unmodifiableList(entities);
     }
-
     public Entity getEntity(String entityName) {
         return Iterables.find(entities, entity -> entity.getName().equalsIgnoreCase(entityName), null);
     }

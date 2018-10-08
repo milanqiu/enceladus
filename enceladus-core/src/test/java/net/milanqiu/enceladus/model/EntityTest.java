@@ -40,6 +40,9 @@ public class EntityTest {
         entity.getAttribute("a1").setName("e4id");
         AssertExt.assertExceptionThrown(() -> entity.setName("e4"),
                 IllegalArgumentException.class, "reserved attribute name e4Id already exists");
+        entity.getAttribute("e4id").setName("e4name");
+        AssertExt.assertExceptionThrown(() -> entity.setName("e4"),
+                IllegalArgumentException.class, "reserved attribute name e4Name already exists");
     }
 
     @Test
@@ -67,5 +70,10 @@ public class EntityTest {
 
         AssertExt.assertExceptionThrown(() -> { entity.newAttribute("A1"); },
                 IllegalArgumentException.class, "attribute name A1 already exists");
+
+        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("e1id"); },
+                IllegalArgumentException.class, "attribute name e1Id is reserved");
+        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("e1name"); },
+                IllegalArgumentException.class, "attribute name e1Name is reserved");
     }
 }

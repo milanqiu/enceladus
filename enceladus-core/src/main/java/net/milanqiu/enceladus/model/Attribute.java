@@ -13,7 +13,6 @@ import net.milanqiu.enceladus.datatype.basictype.BtInt32;
 public class Attribute {
 
     private Entity owner;
-
     private String name = "";
     private DataType type = new BtInt32();
     private boolean nullable = true;
@@ -65,5 +64,6 @@ public class Attribute {
     void checkAttributeName(String attributeName) {
         Preconditions.checkArgument(owner.getAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getIdAttributeName()), "attribute name %s is reserved", owner.getIdAttributeName());
+        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getNameAttributeName()), "attribute name %s is reserved", owner.getNameAttributeName());
     }
 }

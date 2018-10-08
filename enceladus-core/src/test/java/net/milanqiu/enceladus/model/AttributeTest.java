@@ -40,5 +40,7 @@ public class AttributeTest {
 
         AssertExt.assertExceptionThrown(() -> attribute.setName("e1id"),
                 IllegalArgumentException.class, "attribute name e1Id is reserved");
+        AssertExt.assertExceptionThrown(() -> attribute.setName("e1name"),
+                IllegalArgumentException.class, "attribute name e1Name is reserved");
     }
 }
