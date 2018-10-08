@@ -29,6 +29,7 @@ public class ModelTest {
     public void test_getEntity() throws Exception {
         Assert.assertEquals(model.getEntities().get(0), model.getEntity("e1"));
         Assert.assertEquals(model.getEntities().get(1), model.getEntity("e2"));
+        Assert.assertEquals(model.getEntities().get(1), model.getEntity("E2"));
         Assert.assertEquals(null, model.getEntity("e3"));
     }
 
@@ -44,7 +45,7 @@ public class ModelTest {
         Assert.assertEquals("", model.getEntities().get(2).getDescription());
         Assert.assertEquals(0, model.getEntities().get(2).getAttributes().size());
 
-        AssertExt.assertExceptionThrown(() -> { model.newEntity("e1"); },
-                IllegalArgumentException.class, "entity name e1 already exists");
+        AssertExt.assertExceptionThrown(() -> { model.newEntity("E1"); },
+                IllegalArgumentException.class, "entity name E1 already exists");
     }
 }

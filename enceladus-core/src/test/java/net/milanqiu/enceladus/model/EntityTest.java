@@ -34,8 +34,12 @@ public class EntityTest {
         entity.setName("e3");
         Assert.assertEquals("e3", entity.getName());
 
-        AssertExt.assertExceptionThrown(() -> entity.setName("e2"),
-                IllegalArgumentException.class, "entity name e2 already exists");
+        AssertExt.assertExceptionThrown(() -> entity.setName("E2"),
+                IllegalArgumentException.class, "entity name E2 already exists");
+
+        entity.getAttribute("a1").setName("e4id");
+        AssertExt.assertExceptionThrown(() -> entity.setName("e4"),
+                IllegalArgumentException.class, "reserved attribute name e4Id already exists");
     }
 
     @Test
@@ -43,6 +47,7 @@ public class EntityTest {
         Entity entity = model.getEntity("e1");
         Assert.assertEquals(entity.getAttributes().get(0), entity.getAttribute("a1"));
         Assert.assertEquals(entity.getAttributes().get(1), entity.getAttribute("a2"));
+        Assert.assertEquals(entity.getAttributes().get(1), entity.getAttribute("A2"));
         Assert.assertEquals(null, entity.getAttribute("a3"));
     }
 
@@ -60,7 +65,7 @@ public class EntityTest {
         Assert.assertEquals(true, entity.getAttributes().get(2).isNullable());
         Assert.assertEquals("", entity.getAttributes().get(2).getDescription());
 
-        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("a1"); },
-                IllegalArgumentException.class, "attribute name a1 already exists");
+        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("A1"); },
+                IllegalArgumentException.class, "attribute name A1 already exists");
     }
 }

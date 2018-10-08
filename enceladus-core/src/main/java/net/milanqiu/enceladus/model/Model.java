@@ -21,11 +21,7 @@ public class Model {
     }
 
     public Entity getEntity(String entityName) {
-        return Iterables.find(entities, entity -> entity.getName().equals(entityName), null);
-    }
-
-    void checkEntityName(String entityName) {
-        Preconditions.checkArgument(getEntity(entityName) == null, "entity name %s already exists", entityName);
+        return Iterables.find(entities, entity -> entity.getName().equalsIgnoreCase(entityName), null);
     }
 
     public Entity newEntity(String entityName) {

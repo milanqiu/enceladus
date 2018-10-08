@@ -3,6 +3,8 @@ package net.milanqiu.enceladus.model;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
+import net.milanqiu.enceladus.datatype.basictype.BtDomainId;
+import net.milanqiu.enceladus.datatype.basictype.BtInt32Id;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -22,6 +24,9 @@ public class Entity {
 
     private List<Attribute> attributes = new LinkedList<>();
 
+    private String idAttributeName = "Id";
+    private BtDomainId idAttributeType = new BtInt32Id();
+
     public Model getOwner() {
         return owner;
     }
@@ -34,10 +39,11 @@ public class Entity {
     }
     public void setName(String name) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
-        if (this.name.equals(name))
+        if (this.name.equalsIgnoreCase(name))
             return;
-        owner.checkEntityName(name);
+        checkEntityName(name);
         this.name = name;
+        idAttributeName = name.concat("Id");
     }
     public String getDescription() {
         return description;
@@ -50,9 +56,18 @@ public class Entity {
     public List<Attribute> getAttributes() {
         return Collections.unmodifiableList(attributes);
     }
-
     public Attribute getAttribute(String attributeName) {
-        return Iterables.find(attributes, attribute -> attribute.getName().equals(attributeName), null);
+        return Iterables.find(attributes, attribute -> attribute.getName().equalsIgnoreCase(attributeName), null);
+    }
+
+    public String getIdAttributeName() {
+        return idAttributeName;
+    }
+    public BtDomainId getIdAttributeType() {
+        return idAttributeType;
+    }
+    public void setIdAttributeType(BtDomainId idAttributeType) {
+        this.idAttributeType = idAttributeType;
     }
 
     Entity(Model owner, String name) {
@@ -60,8 +75,9 @@ public class Entity {
         setName(name);
     }
 
-    void checkAttributeName(String attributeName) {
-        Preconditions.checkArgument(getAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
+    void checkEntityName(String entityName) {
+        Preconditions.checkArgument(owner.getEntity(entityName) == null, "entity name %s already exists", entityName);
+        Preconditions.checkArgument(getAttribute(entityName.concat("Id")) == null, "reserved attribute name %s already exists", entityName.concat("Id"));
     }
 
     public Attribute newAttribute(String attributeName) {

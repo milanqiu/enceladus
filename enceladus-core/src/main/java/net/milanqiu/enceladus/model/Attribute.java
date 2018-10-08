@@ -31,9 +31,9 @@ public class Attribute {
     }
     public void setName(String name) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
-        if (this.name.equals(name))
+        if (this.name.equalsIgnoreCase(name))
             return;
-        owner.checkAttributeName(name);
+        checkAttributeName(name);
         this.name = name;
     }
     public DataType getType() {
@@ -60,5 +60,10 @@ public class Attribute {
     Attribute(Entity owner, String name) {
         setOwner(owner);
         setName(name);
+    }
+
+    void checkAttributeName(String attributeName) {
+        Preconditions.checkArgument(owner.getAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
+        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getIdAttributeName()), "attribute name %s is reserved", owner.getIdAttributeName());
     }
 }

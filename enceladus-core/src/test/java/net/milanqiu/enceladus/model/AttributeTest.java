@@ -35,7 +35,10 @@ public class AttributeTest {
         attribute.setName("a3");
         Assert.assertEquals("a3", attribute.getName());
 
-        AssertExt.assertExceptionThrown(() -> attribute.setName("a1"),
-                IllegalArgumentException.class, "attribute name a1 already exists");
+        AssertExt.assertExceptionThrown(() -> attribute.setName("A1"),
+                IllegalArgumentException.class, "attribute name A1 already exists");
+
+        AssertExt.assertExceptionThrown(() -> attribute.setName("e1id"),
+                IllegalArgumentException.class, "attribute name e1Id is reserved");
     }
 }
