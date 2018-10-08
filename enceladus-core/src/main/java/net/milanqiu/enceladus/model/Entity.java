@@ -40,8 +40,7 @@ public class Entity {
         return owner;
     }
     private void setOwner(Model owner) {
-        Preconditions.checkNotNull(owner);
-        this.owner = owner;
+        this.owner = Preconditions.checkNotNull(owner);
     }
     public String getName() {
         return name;
@@ -59,8 +58,7 @@ public class Entity {
         return description;
     }
     public void setDescription(String description) {
-        Preconditions.checkNotNull(description);
-        this.description = description;
+        this.description = Preconditions.checkNotNull(description);
     }
 
     public List<Attribute> getAttributes() {
@@ -77,7 +75,7 @@ public class Entity {
         return idAttributeType;
     }
     public void setIdAttributeType(BtDomainId idAttributeType) {
-        this.idAttributeType = idAttributeType;
+        this.idAttributeType = Preconditions.checkNotNull(idAttributeType);
     }
 
     public boolean isHasNameAttribute() {
@@ -93,7 +91,7 @@ public class Entity {
         return nameAttributeType;
     }
     public void setNameAttributeType(BtDomainChar nameAttributeType) {
-        this.nameAttributeType = nameAttributeType;
+        this.nameAttributeType = Preconditions.checkNotNull(nameAttributeType);
     }
 
     public boolean isTree() {

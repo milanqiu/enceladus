@@ -22,8 +22,7 @@ public class Attribute {
         return owner;
     }
     private void setOwner(Entity owner) {
-        Preconditions.checkNotNull(owner);
-        this.owner = owner;
+        this.owner = Preconditions.checkNotNull(owner);
     }
     public String getName() {
         return name;
@@ -39,8 +38,7 @@ public class Attribute {
         return type;
     }
     public void setType(DataType type) {
-        Preconditions.checkNotNull(type);
-        this.type = type;
+        this.type = Preconditions.checkNotNull(type);
     }
     public boolean isNullable() {
         return nullable;
@@ -52,8 +50,7 @@ public class Attribute {
         return description;
     }
     public void setDescription(String description) {
-        Preconditions.checkNotNull(description);
-        this.description = description;
+        this.description = Preconditions.checkNotNull(description);
     }
 
     Attribute(Entity owner, String name) {
