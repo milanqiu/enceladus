@@ -55,6 +55,26 @@ public class EntityTest {
     }
 
     @Test
+    public void test_setSequenceTypeByGroup() throws Exception {
+        Entity entity = model.getEntity("e1");
+        Assert.assertNull(entity.getSequenceGroupAttribute());
+
+        // void setSequenceTypeByGroup(Attribute sequenceGroupAttribute)
+        entity.setSequenceTypeByGroup(entity.getAttribute("a1"));
+        Assert.assertEquals(entity.getAttribute("a1"), entity.getSequenceGroupAttribute());
+
+        AssertExt.assertExceptionThrown(() -> entity.setSequenceTypeByGroup(model.getEntity("e2").getAttribute("a1")),
+                IllegalArgumentException.class, "sequence group attribute should belong to this entity");
+
+        // void setSequenceTypeByGroup(String sequenceGroupAttributeName)
+        entity.setSequenceTypeByGroup("A2");
+        Assert.assertEquals(entity.getAttribute("a2"), entity.getSequenceGroupAttribute());
+
+        AssertExt.assertExceptionThrown(() -> entity.setSequenceTypeByGroup("a3"),
+                IllegalArgumentException.class, "can't find sequence group attribute name: a3");
+    }
+
+    @Test
     public void test_newAttribute() throws Exception {
         Entity entity = model.getEntity("e1");
         Assert.assertEquals(2, entity.getAttributes().size());

@@ -46,5 +46,7 @@ public class AttributeTest {
                 IllegalArgumentException.class, "attribute name ParentId is reserved");
         AssertExt.assertExceptionThrown(() -> attribute.setName("treelevel"),
                 IllegalArgumentException.class, "attribute name TreeLevel is reserved");
+        AssertExt.assertExceptionThrown(() -> attribute.setName("ordinal"),
+                IllegalArgumentException.class, "attribute name Ordinal is reserved");
     }
 }

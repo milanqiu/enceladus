@@ -36,6 +36,14 @@ public class Entity {
     public static final String PARENT_ATTRIBUTE_NAME = "ParentId";
     public static final String LEVEL_ATTRIBUTE_NAME = "TreeLevel";
 
+    private boolean isSequence = false;
+    public static final String ORDINAL_ATTRIBUTE_NAME = "Ordinal";
+    public static final int SEQUENCE_TYPE_SINGLE = 0;
+    public static final int SEQUENCE_TYPE_BY_GROUP = 1;
+    public static final int SEQUENCE_TYPE_IN_TREE = 2;
+    private int sequenceType = SEQUENCE_TYPE_SINGLE;
+    private Attribute sequenceGroupAttribute;
+
     public Model getOwner() {
         return owner;
     }
@@ -99,6 +107,38 @@ public class Entity {
     }
     public void setIsTree(boolean isTree) {
         this.isTree = isTree;
+    }
+
+    public boolean isSequence() {
+        return isSequence;
+    }
+    public void setIsSequence(boolean isSequence) {
+        this.isSequence = isSequence;
+    }
+    public int getSequenceType() {
+        return sequenceType;
+    }
+    public Attribute getSequenceGroupAttribute() {
+        return sequenceGroupAttribute;
+    }
+    public void setSequenceTypeSingle() {
+        this.sequenceType = SEQUENCE_TYPE_SINGLE;
+    }
+    public void setSequenceTypeByGroup(Attribute sequenceGroupAttribute) {
+        Preconditions.checkNotNull(sequenceGroupAttribute);
+        Preconditions.checkArgument(sequenceGroupAttribute.getOwner() == this, "sequence group attribute should belong to this entity");
+        this.sequenceType = SEQUENCE_TYPE_BY_GROUP;
+        this.sequenceGroupAttribute = sequenceGroupAttribute;
+    }
+    public void setSequenceTypeByGroup(String sequenceGroupAttributeName) {
+        Preconditions.checkNotNull(sequenceGroupAttributeName);
+        Attribute sequenceGroupAttribute = getAttribute(sequenceGroupAttributeName);
+        Preconditions.checkArgument(sequenceGroupAttribute != null, "can't find sequence group attribute name: %s", sequenceGroupAttributeName);
+        this.sequenceType = SEQUENCE_TYPE_BY_GROUP;
+        this.sequenceGroupAttribute = sequenceGroupAttribute;
+    }
+    public void setSequenceTypeInTree() {
+        this.sequenceType = SEQUENCE_TYPE_IN_TREE;
     }
 
     Entity(Model owner, String name) {
