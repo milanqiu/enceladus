@@ -126,7 +126,7 @@ public class Entity {
     }
     public void setSequenceTypeByGroup(Attribute sequenceGroupAttribute) {
         Preconditions.checkNotNull(sequenceGroupAttribute);
-        Preconditions.checkArgument(sequenceGroupAttribute.getOwner() == this, "sequence group attribute should belong to this entity");
+        Preconditions.checkArgument(sequenceGroupAttribute.belongsTo(this), "sequence group attribute should belong to this entity");
         this.sequenceType = SEQUENCE_TYPE_BY_GROUP;
         this.sequenceGroupAttribute = sequenceGroupAttribute;
     }
@@ -158,6 +158,10 @@ public class Entity {
 
     public boolean inSameModel(Attribute attribute) {
         return owner.equals(attribute.getOwner().owner);
+    }
+
+    public boolean belongsTo(Model model) {
+        return owner.equals(model);
     }
 
     public Attribute newAttribute(String attributeName) {

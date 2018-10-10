@@ -79,4 +79,12 @@ public class Attribute {
     public boolean inSameEntity(Attribute attribute) {
         return owner.equals(attribute.owner);
     }
+
+    public boolean belongsTo(Model model) {
+        return owner.getOwner().equals(model);
+    }
+
+    public boolean belongsTo(Entity entity) {
+        return owner.equals(entity);
+    }
 }
