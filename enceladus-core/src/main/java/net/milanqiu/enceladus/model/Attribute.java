@@ -18,6 +18,8 @@ public class Attribute {
     private boolean nullable = true;
     private String description = "";
 
+    private Reference reference = null;
+
     public Entity getOwner() {
         return owner;
     }
@@ -53,6 +55,34 @@ public class Attribute {
         this.description = Preconditions.checkNotNull(description);
     }
 
+    public Reference getReference() {
+        return reference;
+    }
+    public void setReference(Entity refEntity) {
+        if (reference == null)
+            reference = new Reference(this, refEntity);
+        else
+            reference.set(refEntity);
+    }
+    public void setReference(String refEntityName) {
+        if (reference == null)
+            reference = new Reference(this, refEntityName);
+        else
+            reference.set(refEntityName);
+    }
+    public void setReference(Entity refEntity, Attribute refAttribute) {
+        if (reference == null)
+            reference = new Reference(this, refEntity, refAttribute);
+        else
+            reference.set(refEntity, refAttribute);
+    }
+    public void setReference(String refEntityName, String refAttributeName) {
+        if (reference == null)
+            reference = new Reference(this, refEntityName, refAttributeName);
+        else
+            reference.set(refEntityName, refAttributeName);
+    }
+
     Attribute(Entity owner, String name) {
         setOwner(owner);
         setName(name);
@@ -66,6 +96,10 @@ public class Attribute {
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.PARENT_ATTRIBUTE_NAME),  "attribute name %s is reserved", Entity.PARENT_ATTRIBUTE_NAME);
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.LEVEL_ATTRIBUTE_NAME),   "attribute name %s is reserved", Entity.LEVEL_ATTRIBUTE_NAME);
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.ORDINAL_ATTRIBUTE_NAME), "attribute name %s is reserved", Entity.ORDINAL_ATTRIBUTE_NAME);
+    }
+
+    public Model getModel() {
+        return owner.getOwner();
     }
 
     public boolean inSameModel(Entity entity) {
@@ -86,5 +120,9 @@ public class Attribute {
 
     public boolean belongsTo(Entity entity) {
         return owner.equals(entity);
+    }
+
+    public void deleteReference() {
+        reference = null;
     }
 }
