@@ -49,4 +49,21 @@ public class AttributeTest {
         AssertExt.assertExceptionThrown(() -> attribute.setName("ordinal"),
                 IllegalArgumentException.class, "attribute name Ordinal is reserved");
     }
+
+    @Test
+    public void test_inSameModel() throws Exception {
+        // boolean inSameModel(Entity entity)
+        Assert.assertTrue(model.getEntity("e1").getAttribute("a1").inSameModel(model.getEntity("e2")));
+        Assert.assertFalse(model.getEntity("e1").getAttribute("a1").inSameModel(new Model().newEntity("e1")));
+
+        // boolean inSameModel(Attribute attribute)
+        Assert.assertTrue(model.getEntity("e1").getAttribute("a1").inSameModel(model.getEntity("e2").getAttribute("a3")));
+        Assert.assertFalse(model.getEntity("e1").getAttribute("a1").inSameModel(new Model().newEntity("e1").newAttribute("a1")));
+    }
+
+    @Test
+    public void test_inSameEntity() throws Exception {
+        Assert.assertTrue(model.getEntity("e1").getAttribute("a1").inSameEntity(model.getEntity("e1").getAttribute("a2")));
+        Assert.assertFalse(model.getEntity("e1").getAttribute("a1").inSameEntity(model.getEntity("e2").getAttribute("a1")));
+    }
 }

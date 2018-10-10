@@ -75,6 +75,17 @@ public class EntityTest {
     }
 
     @Test
+    public void test_inSameModel() throws Exception {
+        // boolean inSameModel(Entity entity)
+        Assert.assertTrue(model.getEntity("e1").inSameModel(model.getEntity("e2")));
+        Assert.assertFalse(model.getEntity("e1").inSameModel(new Model().newEntity("e1")));
+
+        // boolean inSameModel(Attribute attribute)
+        Assert.assertTrue(model.getEntity("e1").inSameModel(model.getEntity("e2").getAttribute("a1")));
+        Assert.assertFalse(model.getEntity("e1").inSameModel(new Model().newEntity("e1").newAttribute("a1")));
+    }
+
+    @Test
     public void test_newAttribute() throws Exception {
         Entity entity = model.getEntity("e1");
         Assert.assertEquals(2, entity.getAttributes().size());

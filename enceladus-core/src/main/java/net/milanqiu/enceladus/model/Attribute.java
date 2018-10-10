@@ -67,4 +67,16 @@ public class Attribute {
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.LEVEL_ATTRIBUTE_NAME),   "attribute name %s is reserved", Entity.LEVEL_ATTRIBUTE_NAME);
         Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.ORDINAL_ATTRIBUTE_NAME), "attribute name %s is reserved", Entity.ORDINAL_ATTRIBUTE_NAME);
     }
+
+    public boolean inSameModel(Entity entity) {
+        return owner.getOwner().equals(entity.getOwner());
+    }
+
+    public boolean inSameModel(Attribute attribute) {
+        return owner.getOwner().equals(attribute.owner.getOwner());
+    }
+
+    public boolean inSameEntity(Attribute attribute) {
+        return owner.equals(attribute.owner);
+    }
 }

@@ -152,6 +152,14 @@ public class Entity {
         Preconditions.checkArgument(getAttribute(entityName.concat("Name")) == null, "reserved attribute name %s already exists", entityName.concat("Name"));
     }
 
+    public boolean inSameModel(Entity entity) {
+        return owner.equals(entity.owner);
+    }
+
+    public boolean inSameModel(Attribute attribute) {
+        return owner.equals(attribute.getOwner().owner);
+    }
+
     public Attribute newAttribute(String attributeName) {
         Attribute result = new Attribute(this, attributeName);
         attributes.add(result);
