@@ -70,6 +70,9 @@
                     <source>${project.custom.jdkVersion}</source>
                     <target>${project.custom.jdkVersion}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
