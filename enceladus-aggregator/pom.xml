@@ -57,7 +57,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.custom.jdkVersion>1.8</project.custom.jdkVersion>
-        <project.custom.mimasVersion>1.2.0-SNAPSHOT</project.custom.mimasVersion>
+        <project.custom.mimasVersion>1.3.0-SNAPSHOT</project.custom.mimasVersion>
     </properties>
 
     <build>
