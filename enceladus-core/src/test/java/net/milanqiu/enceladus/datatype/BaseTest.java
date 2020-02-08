@@ -6,6 +6,7 @@ import net.milanqiu.enceladus.datatype.basictype.*;
 import net.milanqiu.enceladus.datatype.basictype.specialized.BtMoneyBillion;
 import net.milanqiu.enceladus.datatype.basictype.specialized.BtPercentMillion;
 import net.milanqiu.enceladus.datatype.basictype.specialized.BtString20;
+import net.milanqiu.enceladus.datatype.basictype.specialized.BtString50;
 import net.milanqiu.enceladus.datatype.collectiontype.CtArray;
 import net.milanqiu.enceladus.datatype.collectiontype.CtList;
 import net.milanqiu.enceladus.datatype.collectiontype.CtMap;
@@ -65,6 +66,12 @@ public class BaseTest {
         propertiesB.put("2", new BtInt32());
         Assert.assertEquals(new AtBundle(propertiesA), new AtBundle(propertiesB));
         Assert.assertEquals(new AtObject(propertiesA), new AtObject(propertiesB));
+        propertiesB.put("1", new BtString50());
+        Assert.assertNotEquals(new AtBundle(propertiesA), new AtBundle(propertiesB));
+        Assert.assertNotEquals(new AtObject(propertiesA), new AtObject(propertiesB));
+        propertiesB.put("3", new BtString20());
+        Assert.assertNotEquals(new AtBundle(propertiesA), new AtBundle(propertiesB));
+        Assert.assertNotEquals(new AtObject(propertiesA), new AtObject(propertiesB));
 
         Assert.assertEquals(new CtArray(new BtString(20)), new CtArray(new BtString20()));
         Assert.assertEquals(new CtList(new BtString(20)), new CtList(new BtString20()));
