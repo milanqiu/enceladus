@@ -33,4 +33,9 @@ public abstract class BtDomainBinary extends BtDomainByte {
     public int hashCode() {
         return maxLength;
     }
+
+    @Override
+    protected String toStringCustom() {
+        return getClass().getSimpleName() + "(" + maxLength + ")";
+    }
 }

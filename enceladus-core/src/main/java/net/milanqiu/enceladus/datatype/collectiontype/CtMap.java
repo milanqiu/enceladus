@@ -45,4 +45,9 @@ public class CtMap extends CollectionType {
         result = 31 * result + (valueType != null ? valueType.hashCode() : 0);
         return result;
     }
+
+    @Override
+    protected String toStringCustom() {
+        return getClass().getSimpleName() + "(" + keyType + "," + valueType + ")";
+    }
 }

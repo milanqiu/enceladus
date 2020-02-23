@@ -59,4 +59,36 @@ public class BasicTypesBaseTest {
         Assert.assertNotEquals(new BtInt32Id(), new BtInt32());
         Assert.assertNotEquals(new BtDecimal(10, 2), new BtPercent(10, 2));
     }
+
+    @Test
+    public void test_toString() throws Exception {
+        // BtDomainId descendants
+        Assert.assertEquals("BtInt32Id", new BtInt32Id().toString());
+        Assert.assertEquals("BtAutoIncInt32Id", new BtAutoIncInt32Id().toString());
+        Assert.assertEquals("BtStringId(20)", new BtStringId(20).toString());
+        Assert.assertEquals("BtUuidId", new BtUuidId().toString());
+
+        // BtDomainNumber descendants
+        Assert.assertEquals("BtBit", new BtBit().toString());
+        Assert.assertEquals("BtInt32", new BtInt32().toString());
+        Assert.assertEquals("BtFloat32", new BtFloat32().toString());
+        Assert.assertEquals("BtDecimal(10,2)", new BtDecimal(10, 2).toString());
+        Assert.assertEquals("BtPercent(10,2)", new BtPercent(10, 2).toString());
+        Assert.assertEquals("BtPercentMillion", new BtPercentMillion().toString());
+        Assert.assertEquals("BtMoney(10,2)", new BtMoney(10, 2).toString());
+        Assert.assertEquals("BtMoneyBillion", new BtMoneyBillion().toString());
+
+        // BtDomainDateTime descendants
+        Assert.assertEquals("BtDateTime", new BtDateTime().toString());
+
+        // BtDomainChar descendants
+        Assert.assertEquals("BtString(20)", new BtString(20).toString());
+        Assert.assertEquals("BtString20", new BtString20().toString());
+        Assert.assertEquals("BtText64K", new BtText64K().toString());
+
+        // BtDomainByte descendants
+        Assert.assertEquals("BtBinary(20)", new BtBinary(20).toString());
+        Assert.assertEquals("BtBlob64K", new BtBlob64K().toString());
+        Assert.assertEquals("BtUuid", new BtUuid().toString());
+    }
 }

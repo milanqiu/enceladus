@@ -42,4 +42,9 @@ public abstract class BtDomainDecimal extends BtDomainNumber {
         result = 31 * result + scale;
         return result;
     }
+
+    @Override
+    protected String toStringCustom() {
+        return getClass().getSimpleName() + "(" + precision + "," + scale + ")";
+    }
 }

@@ -31,4 +31,19 @@ public class CollectionTypesBaseTest {
         // misc
         Assert.assertNotEquals(new CtArray(new BtInt32()), new CtList(new BtInt32()));
     }
+
+    @Test
+    public void test_toString() throws Exception {
+        // CtArray
+        Assert.assertEquals("CtArray(BtString(20))", new CtArray(new BtString(20)).toString());
+        Assert.assertEquals("CtArray(CtArray(BtString(20)))", new CtArray(new CtArray(new BtString(20))).toString());
+
+        // CtList
+        Assert.assertEquals("CtList(BtString(20))", new CtList(new BtString(20)).toString());
+        Assert.assertEquals("CtList(CtList(BtString(20)))", new CtList(new CtList(new BtString(20))).toString());
+
+        // CtMap
+        Assert.assertEquals("CtMap(BtString(20),BtInt32)", new CtMap(new BtString(20), new BtInt32()).toString());
+        Assert.assertEquals("CtMap(CtMap(BtString(20),BtInt32),BtInt32)", new CtMap(new CtMap(new BtString(20), new BtInt32()), new BtInt32()).toString());
+    }
 }

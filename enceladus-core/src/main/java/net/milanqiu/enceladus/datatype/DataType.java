@@ -1,6 +1,8 @@
 package net.milanqiu.enceladus.datatype;
 
+import net.milanqiu.mimas.instrumentation.exception.CompiletimeException;
 import net.milanqiu.mimas.lang.TristateBoolean;
+import net.milanqiu.mimas.runtime.ReflectionUtils;
 
 /**
  * <pre><tt>
@@ -101,6 +103,19 @@ public abstract class DataType {
                 return false;
             default:
                 return true;
+        }
+    }
+
+    protected String toStringCustom() {
+        throw new CompiletimeException();
+    }
+
+    @Override
+    public String toString() {
+        if (ReflectionUtils.hasPublicDefaultConstructor(getClass())) {
+            return getClass().getSimpleName();
+        } else {
+            return toStringCustom();
         }
     }
 }

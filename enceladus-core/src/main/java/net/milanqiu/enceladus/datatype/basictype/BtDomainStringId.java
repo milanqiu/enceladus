@@ -33,4 +33,9 @@ public abstract class BtDomainStringId extends BtDomainId {
     public int hashCode() {
         return maxLength;
     }
+
+    @Override
+    protected String toStringCustom() {
+        return getClass().getSimpleName() + "(" + maxLength + ")";
+    }
 }

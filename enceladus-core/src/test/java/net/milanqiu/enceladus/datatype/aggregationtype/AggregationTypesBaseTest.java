@@ -100,4 +100,15 @@ public class AggregationTypesBaseTest {
         Assert.assertNotEquals(new AtBundle(propertiesBA), new AtObject(propertiesBA));
         Assert.assertNotEquals(new AtBundle(propertiesOA), new AtObject(propertiesOA));
     }
+
+    @Test
+    public void test_toString() throws Exception {
+        // AtBundle
+        Assert.assertEquals("AtBundle(1:BtString(20),2:BtInt32)", new AtBundle(propertiesA).toString());
+        Assert.assertEquals("AtBundle(nested:AtBundle(1:BtString(20),2:BtInt32))", new AtBundle(propertiesBA).toString());
+
+        // AtObject
+        Assert.assertEquals("AtObject(1:BtString(20),2:BtInt32)", new AtObject(propertiesA).toString());
+        Assert.assertEquals("AtObject(nested:AtObject(1:BtString(20),2:BtInt32))", new AtObject(propertiesOA).toString());
+    }
 }

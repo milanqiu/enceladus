@@ -38,4 +38,9 @@ public class CtList extends CollectionType {
     public int hashCode() {
         return elementType != null ? elementType.hashCode() : 0;
     }
+
+    @Override
+    protected String toStringCustom() {
+        return getClass().getSimpleName() + "(" + elementType + ")";
+    }
 }
