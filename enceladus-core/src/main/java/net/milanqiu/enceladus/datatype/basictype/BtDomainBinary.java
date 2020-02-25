@@ -17,16 +17,9 @@ public abstract class BtDomainBinary extends BtDomainByte {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                BtDomainBinary that = (BtDomainBinary) o;
-                return maxLength == that.maxLength;
-        }
+    protected boolean equalsCustom(Object o) {
+        BtDomainBinary that = (BtDomainBinary) o;
+        return maxLength == that.maxLength;
     }
 
     @Override

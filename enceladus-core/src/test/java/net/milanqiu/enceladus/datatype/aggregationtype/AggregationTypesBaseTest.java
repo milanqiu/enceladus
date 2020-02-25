@@ -99,6 +99,9 @@ public class AggregationTypesBaseTest {
         Assert.assertNotEquals(new AtBundle(propertiesA), new AtObject(propertiesA));
         Assert.assertNotEquals(new AtBundle(propertiesBA), new AtObject(propertiesBA));
         Assert.assertNotEquals(new AtBundle(propertiesOA), new AtObject(propertiesOA));
+        Assert.assertNotEquals(new AtObject(propertiesA), new AtBundle(propertiesA));
+        Assert.assertNotEquals(new AtObject(propertiesBA), new AtBundle(propertiesBA));
+        Assert.assertNotEquals(new AtObject(propertiesOA), new AtBundle(propertiesOA));
     }
 
     @Test

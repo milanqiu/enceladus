@@ -22,16 +22,9 @@ public class AtBundle extends AggregationType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                AtBundle that = (AtBundle) o;
-                return Objects.equals(properties, that.properties);
-        }
+    protected boolean equalsCustom(Object o) {
+        AtBundle that = (AtBundle) o;
+        return Objects.equals(properties, that.properties);
     }
 
     @Override

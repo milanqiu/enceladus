@@ -17,16 +17,9 @@ public abstract class BtDomainStringId extends BtDomainId {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                BtDomainStringId that = (BtDomainStringId) o;
-                return maxLength == that.maxLength;
-        }
+    protected boolean equalsCustom(Object o) {
+        BtDomainStringId that = (BtDomainStringId) o;
+        return maxLength == that.maxLength;
     }
 
     @Override

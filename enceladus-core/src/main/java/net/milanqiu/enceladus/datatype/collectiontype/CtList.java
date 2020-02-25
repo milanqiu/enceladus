@@ -22,16 +22,9 @@ public class CtList extends CollectionType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                CtList that = (CtList) o;
-                return Objects.equals(elementType, that.elementType);
-        }
+    protected boolean equalsCustom(Object o) {
+        CtList that = (CtList) o;
+        return Objects.equals(elementType, that.elementType);
     }
 
     @Override

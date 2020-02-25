@@ -1,7 +1,6 @@
 package net.milanqiu.enceladus.datatype;
 
 import net.milanqiu.mimas.instrumentation.exception.CompiletimeException;
-import net.milanqiu.mimas.lang.TristateBoolean;
 import net.milanqiu.mimas.runtime.ReflectionUtils;
 
 /**
@@ -86,23 +85,20 @@ public abstract class DataType {
             return getClass();
     }
 
-    protected TristateBoolean precheckEqual(Object o) {
-        if (this == o) return TristateBoolean.TRUE;
-        if (o == null) return TristateBoolean.FALSE;
-        if (!(o instanceof DataType)) return TristateBoolean.FALSE;
-        if (getUnspecializedClass() != ((DataType) o).getUnspecializedClass()) return TristateBoolean.FALSE;
-        return TristateBoolean.THIRD_STATE;
+    protected boolean equalsCustom(Object o) {
+        throw new CompiletimeException();
     }
 
     @Override
     public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                return true;
+        if (this == o) return true;
+        if (o == null) return false;
+        if (!(o instanceof DataType)) return false;
+        if (getUnspecializedClass() != ((DataType)o).getUnspecializedClass()) return false;
+        if (ReflectionUtils.hasPublicDefaultConstructor(getUnspecializedClass())) {
+            return true;
+        } else {
+            return equalsCustom(o);
         }
     }
 

@@ -17,16 +17,9 @@ public abstract class BtDomainString extends BtDomainChar {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                BtDomainString that = (BtDomainString) o;
-                return maxLength == that.maxLength;
-        }
+    protected boolean equalsCustom(Object o) {
+        BtDomainString that = (BtDomainString) o;
+        return maxLength == that.maxLength;
     }
 
     @Override

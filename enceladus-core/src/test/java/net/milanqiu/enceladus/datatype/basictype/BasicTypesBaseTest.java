@@ -34,11 +34,17 @@ public class BasicTypesBaseTest {
         Assert.assertNotEquals(new BtPercent(10, 2), new BtPercent(10, 4));
         Assert.assertNotEquals(new BtPercent(10, 2), new BtPercent(12, 2));
         Assert.assertEquals(new BtPercent(10, 4), new BtPercentMillion());
+        Assert.assertEquals(new BtPercentMillion(), new BtPercent(10, 4));
+        Assert.assertNotEquals(new BtPercent(10, 5), new BtPercentMillion());
+        Assert.assertNotEquals(new BtPercentMillion(), new BtPercent(10, 5));
 
         Assert.assertEquals(new BtMoney(10, 2), new BtMoney(10, 2));
         Assert.assertNotEquals(new BtMoney(10, 2), new BtMoney(10, 4));
         Assert.assertNotEquals(new BtMoney(10, 2), new BtMoney(12, 2));
         Assert.assertEquals(new BtMoney(11, 2), new BtMoneyBillion());
+        Assert.assertEquals(new BtMoneyBillion(), new BtMoney(11, 2));
+        Assert.assertNotEquals(new BtMoney(11, 3), new BtMoneyBillion());
+        Assert.assertNotEquals(new BtMoneyBillion(), new BtMoney(11, 3));
 
         // BtDomainDateTime descendants
         Assert.assertEquals(new BtDateTime(), new BtDateTime());
@@ -47,6 +53,9 @@ public class BasicTypesBaseTest {
         Assert.assertEquals(new BtString(20), new BtString(20));
         Assert.assertNotEquals(new BtString(20), new BtString(30));
         Assert.assertEquals(new BtString(20), new BtString20());
+        Assert.assertEquals(new BtString20(), new BtString(20));
+        Assert.assertNotEquals(new BtString(30), new BtString20());
+        Assert.assertNotEquals(new BtString20(), new BtString(30));
         Assert.assertEquals(new BtText64K(), new BtText64K());
 
         // BtDomainByte descendants
@@ -57,7 +66,9 @@ public class BasicTypesBaseTest {
 
         // misc
         Assert.assertNotEquals(new BtInt32Id(), new BtInt32());
+        Assert.assertNotEquals(new BtInt32(), new BtInt32Id());
         Assert.assertNotEquals(new BtDecimal(10, 2), new BtPercent(10, 2));
+        Assert.assertNotEquals(new BtPercent(10, 2), new BtDecimal(10, 2));
     }
 
     @Test

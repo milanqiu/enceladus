@@ -27,16 +27,9 @@ public class CtMap extends CollectionType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                CtMap that = (CtMap) o;
-                return Objects.equals(keyType, that.keyType) && Objects.equals(valueType, that.valueType);
-        }
+    protected boolean equalsCustom(Object o) {
+        CtMap that = (CtMap) o;
+        return Objects.equals(keyType, that.keyType) && Objects.equals(valueType, that.valueType);
     }
 
     @Override

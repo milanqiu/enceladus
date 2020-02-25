@@ -18,18 +18,32 @@ public class CollectionTypesBaseTest {
         // CtArray
         Assert.assertEquals(new CtArray(new BtString(20)), new CtArray(new BtString20()));
         Assert.assertNotEquals(new CtArray(new BtString(20)), new CtArray(new BtString(30)));
+        Assert.assertEquals(new CtArray(new CtArray(new BtString(20))), new CtArray(new CtArray(new BtString20())));
+        Assert.assertNotEquals(new CtArray(new CtArray(new BtString(20))), new CtArray(new CtArray(new BtString(30))));
 
         // CtList
         Assert.assertEquals(new CtList(new BtString(20)), new CtList(new BtString20()));
         Assert.assertNotEquals(new CtList(new BtString(20)), new CtList(new BtString(30)));
+        Assert.assertEquals(new CtList(new CtList(new BtString(20))), new CtList(new CtList(new BtString20())));
+        Assert.assertNotEquals(new CtList(new CtList(new BtString(20))), new CtList(new CtList(new BtString(30))));
 
         // CtMap
-        Assert.assertEquals(new CtMap(new BtString(20), new BtInt32()), new CtMap(new BtString20(), new BtInt32()));
-        Assert.assertNotEquals(new CtMap(new BtString(20), new BtInt32()), new CtMap(new BtString(30), new BtInt32()));
-        Assert.assertNotEquals(new CtMap(new BtString(20), new BtInt32()), new CtMap(new BtString20(), new BtInt32Id()));
+        Assert.assertEquals(new CtMap(new BtString(20), new BtInt32()),
+                            new CtMap(new BtString20(), new BtInt32()));
+        Assert.assertNotEquals(new CtMap(new BtString(20), new BtInt32()),
+                               new CtMap(new BtString(30), new BtInt32()));
+        Assert.assertNotEquals(new CtMap(new BtString(20), new BtInt32()),
+                               new CtMap(new BtString20(), new BtInt32Id()));
+        Assert.assertEquals(new CtMap(new CtMap(new BtString(20), new BtInt32()), new BtInt32()),
+                            new CtMap(new CtMap(new BtString20(), new BtInt32()), new BtInt32()));
+        Assert.assertNotEquals(new CtMap(new CtMap(new BtString(20), new BtInt32()), new BtInt32()),
+                               new CtMap(new CtMap(new BtString(30), new BtInt32()), new BtInt32()));
+        Assert.assertNotEquals(new CtMap(new CtMap(new BtString(20), new BtInt32()), new BtInt32()),
+                               new CtMap(new CtMap(new BtString20(), new BtInt32Id()), new BtInt32()));
 
         // misc
         Assert.assertNotEquals(new CtArray(new BtInt32()), new CtList(new BtInt32()));
+        Assert.assertNotEquals(new CtList(new BtInt32()), new CtArray(new BtInt32()));
     }
 
     @Test

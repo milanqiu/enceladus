@@ -22,16 +22,9 @@ public class CtArray extends CollectionType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                CtArray that = (CtArray) o;
-                return Objects.equals(elementType, that.elementType);
-        }
+    protected boolean equalsCustom(Object o) {
+        CtArray that = (CtArray) o;
+        return Objects.equals(elementType, that.elementType);
     }
 
     @Override

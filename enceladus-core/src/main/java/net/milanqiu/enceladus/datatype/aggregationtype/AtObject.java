@@ -22,16 +22,9 @@ public class AtObject extends AggregationType {
     }
 
     @Override
-    public boolean equals(Object o) {
-        switch (precheckEqual(o)) {
-            case TRUE:
-                return true;
-            case FALSE:
-                return false;
-            default:
-                AtObject that = (AtObject) o;
-                return Objects.equals(properties, that.properties);
-        }
+    protected boolean equalsCustom(Object o) {
+        AtObject that = (AtObject) o;
+        return Objects.equals(properties, that.properties);
     }
 
     @Override
