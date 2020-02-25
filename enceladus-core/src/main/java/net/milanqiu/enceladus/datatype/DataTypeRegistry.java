@@ -117,7 +117,7 @@ public class DataTypeRegistry {
         registerDataTypes();
     }
 
-    public Class<? extends DataType> getDataType(String name) {
+    public Class<? extends DataType> getDataTypeClazz(String name) {
         Class<? extends DataType> result = DATA_TYPES.get(name);
         Preconditions.checkArgument(result != null, "data type name not found: %s", name);
         return result;
