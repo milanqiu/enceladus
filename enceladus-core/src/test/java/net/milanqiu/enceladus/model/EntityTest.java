@@ -1,13 +1,11 @@
 package net.milanqiu.enceladus.model;
 
-import net.milanqiu.enceladus.datatype.basictype.BtInt32;
 import net.milanqiu.mimas.junit.AssertExt;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * <p>
  * Creation Date: 2018-09-13
  * @author Milan Qiu
  */
@@ -19,92 +17,138 @@ public class EntityTest {
     public void setUp() throws Exception {
         model = new Model();
         model.newEntity("e1");
-        model.getEntity("e1").newAttribute("a1");
-        model.getEntity("e1").newAttribute("a2");
+        model.findEntity("e1").newAttribute("a1");
+        model.findEntity("e1").newAttribute("a2");
         model.newEntity("e2");
-        model.getEntity("e2").newAttribute("a1");
-        model.getEntity("e2").newAttribute("a3");
+        model.findEntity("e2").newAttribute("a1");
+        model.findEntity("e2").newAttribute("a3");
     }
 
     @Test
     public void test_setName() throws Exception {
-        Entity entity = model.getEntity("e1");
+        Entity entity = model.findEntity("e1");
+        Assert.assertEquals("e1", entity.getName());
+        Assert.assertEquals("e1Id", entity.getIdAttributeName());
+        Assert.assertEquals("e1Name", entity.getNameAttributeName());
+
         entity.setName("e3");
         Assert.assertEquals("e3", entity.getName());
-        entity.setName("e3");
+        Assert.assertEquals("e3Id", entity.getIdAttributeName());
+        Assert.assertEquals("e3Name", entity.getNameAttributeName());
+
+        entity.setName("E3");
         Assert.assertEquals("e3", entity.getName());
+        Assert.assertEquals("e3Id", entity.getIdAttributeName());
+        Assert.assertEquals("e3Name", entity.getNameAttributeName());
 
         AssertExt.assertExceptionThrown(() -> entity.setName("E2"),
                 IllegalArgumentException.class, "entity name E2 already exists");
 
-        entity.getAttribute("a1").setName("e4id");
+        entity.findAttribute("a1").setName("e4Id");
         AssertExt.assertExceptionThrown(() -> entity.setName("e4"),
                 IllegalArgumentException.class, "reserved attribute name e4Id already exists");
-        entity.getAttribute("e4id").setName("e4name");
+
+        entity.findAttribute("e4Id").setName("E4name");
         AssertExt.assertExceptionThrown(() -> entity.setName("e4"),
                 IllegalArgumentException.class, "reserved attribute name e4Name already exists");
     }
 
     @Test
-    public void test_getAttribute() throws Exception {
-        Entity entity = model.getEntity("e1");
-        Assert.assertEquals(entity.getAttributes().get(0), entity.getAttribute("a1"));
-        Assert.assertEquals(entity.getAttributes().get(1), entity.getAttribute("a2"));
-        Assert.assertEquals(entity.getAttributes().get(1), entity.getAttribute("A2"));
-        Assert.assertEquals(null, entity.getAttribute("a3"));
+    public void test_setSequenceTypeToByGroup() throws Exception {
+        // void setSequenceTypeToByGroup(Attribute sequenceGroupAttribute)
+        {
+            Entity entity = model.findEntity("e1");
+            Assert.assertEquals(Entity.SEQUENCE_TYPE_SINGLE, entity.getSequenceType());
+            Assert.assertEquals(null, entity.getSequenceGroupAttribute());
+
+            entity.setSequenceTypeToByGroup(entity.findAttribute("a1"));
+            Assert.assertEquals(Entity.SEQUENCE_TYPE_BY_GROUP, entity.getSequenceType());
+            Assert.assertEquals(entity.findAttribute("a1"), entity.getSequenceGroupAttribute());
+
+            AssertExt.assertExceptionThrown(() -> entity.setSequenceTypeToByGroup(model.findEntity("e2").findAttribute("a1")),
+                    IllegalArgumentException.class, "sequence group attribute should belong to this entity");
+        }
+
+        // void setSequenceTypeToByGroup(String sequenceGroupAttributeName)
+        {
+            Entity entity = model.findEntity("e2");
+            Assert.assertEquals(Entity.SEQUENCE_TYPE_SINGLE, entity.getSequenceType());
+            Assert.assertEquals(null, entity.getSequenceGroupAttribute());
+
+            entity.setSequenceTypeToByGroup("A1");
+            Assert.assertEquals(Entity.SEQUENCE_TYPE_BY_GROUP, entity.getSequenceType());
+            Assert.assertEquals(entity.findAttribute("a1"), entity.getSequenceGroupAttribute());
+
+            AssertExt.assertExceptionThrown(() -> entity.setSequenceTypeToByGroup("a4"),
+                    IllegalArgumentException.class, "can't find sequence group attribute name: a4");
+        }
     }
 
     @Test
-    public void test_setSequenceTypeByGroup() throws Exception {
-        Entity entity = model.getEntity("e1");
-        Assert.assertNull(entity.getSequenceGroupAttribute());
+    public void test_withName() throws Exception {
+        Entity entity = model.findEntity("e1");
+        Assert.assertTrue(entity.withName("e1"));
+        Assert.assertTrue(entity.withName("E1"));
+        Assert.assertFalse(entity.withName("e2"));
+    }
 
-        // void setSequenceTypeByGroup(Attribute sequenceGroupAttribute)
-        entity.setSequenceTypeByGroup(entity.getAttribute("a1"));
-        Assert.assertEquals(entity.getAttribute("a1"), entity.getSequenceGroupAttribute());
+    @Test
+    public void test_findAttribute() throws Exception {
+        Entity entity = model.findEntity("e1");
+        Assert.assertEquals(entity.getAttributes().get(0), entity.findAttribute("a1"));
+        Assert.assertEquals(entity.getAttributes().get(1), entity.findAttribute("a2"));
+        Assert.assertEquals(entity.getAttributes().get(1), entity.findAttribute("A2"));
+        Assert.assertEquals(null, entity.findAttribute("a3"));
+    }
 
-        AssertExt.assertExceptionThrown(() -> entity.setSequenceTypeByGroup(model.getEntity("e2").getAttribute("a1")),
-                IllegalArgumentException.class, "sequence group attribute should belong to this entity");
+    @Test
+    public void test_hasAttribute() throws Exception {
+        Entity entity = model.findEntity("e1");
+        Assert.assertTrue(entity.hasAttribute("a1"));
+        Assert.assertTrue(entity.hasAttribute("a2"));
+        Assert.assertTrue(entity.hasAttribute("A2"));
+        Assert.assertFalse(entity.hasAttribute("a3"));
+    }
 
-        // void setSequenceTypeByGroup(String sequenceGroupAttributeName)
-        entity.setSequenceTypeByGroup("A2");
-        Assert.assertEquals(entity.getAttribute("a2"), entity.getSequenceGroupAttribute());
-
-        AssertExt.assertExceptionThrown(() -> entity.setSequenceTypeByGroup("a3"),
-                IllegalArgumentException.class, "can't find sequence group attribute name: a3");
+    @Test
+    public void test_belongsTo() throws Exception {
+        Entity entity = model.findEntity("e1");
+        Assert.assertTrue(entity.belongsTo(model));
+        Assert.assertFalse(entity.belongsTo(new Model()));
     }
 
     @Test
     public void test_inSameModel() throws Exception {
+        Entity entity = model.findEntity("e1");
+
         // boolean inSameModel(Entity entity)
-        Assert.assertTrue(model.getEntity("e1").inSameModel(model.getEntity("e2")));
-        Assert.assertFalse(model.getEntity("e1").inSameModel(new Model().newEntity("e1")));
+        Assert.assertTrue(entity.inSameModel(model.findEntity("e2")));
+        Assert.assertFalse(entity.inSameModel(new Model().newEntity("e1")));
 
         // boolean inSameModel(Attribute attribute)
-        Assert.assertTrue(model.getEntity("e1").inSameModel(model.getEntity("e2").getAttribute("a1")));
-        Assert.assertFalse(model.getEntity("e1").inSameModel(new Model().newEntity("e1").newAttribute("a1")));
+        Assert.assertTrue(entity.inSameModel(model.findEntity("e2").findAttribute("a1")));
+        Assert.assertFalse(entity.inSameModel(new Model().newEntity("e1").newAttribute("a1")));
     }
 
     @Test
     public void test_newAttribute() throws Exception {
-        Entity entity = model.getEntity("e1");
+        Entity entity = model.findEntity("e1");
         Assert.assertEquals(2, entity.getAttributes().size());
 
         Attribute attribute = entity.newAttribute("a3");
-        Assert.assertEquals(3, entity.getAttributes().size());
+        Assert.assertEquals(3,         entity.getAttributes().size());
         Assert.assertEquals(attribute, entity.getAttributes().get(2));
-        Assert.assertEquals(entity, entity.getAttributes().get(2).getOwner());
-        Assert.assertEquals("a3", entity.getAttributes().get(2).getName());
-        Assert.assertEquals(new BtInt32(), entity.getAttributes().get(2).getType());
-        Assert.assertEquals(true, entity.getAttributes().get(2).isNullable());
-        Assert.assertEquals("", entity.getAttributes().get(2).getDescription());
+        Assert.assertEquals(entity,    entity.getAttributes().get(2).getOwner());
+        Assert.assertEquals("a3",      entity.getAttributes().get(2).getName());
+        Assert.assertEquals("",        entity.getAttributes().get(2).getDescription());
 
-        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("A1"); },
+        AssertExt.assertExceptionThrown(() -> entity.newAttribute("A1"),
                 IllegalArgumentException.class, "attribute name A1 already exists");
-
-        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("e1id"); },
+        AssertExt.assertExceptionThrown(() -> entity.newAttribute("e1Id"),
                 IllegalArgumentException.class, "attribute name e1Id is reserved");
-        AssertExt.assertExceptionThrown(() -> { entity.newAttribute("e1name"); },
+        AssertExt.assertExceptionThrown(() -> entity.newAttribute("E1name"),
                 IllegalArgumentException.class, "attribute name e1Name is reserved");
+        AssertExt.assertExceptionThrown(() -> entity.newAttribute("ordinal"),
+                IllegalArgumentException.class, "attribute name Ordinal is reserved");
     }
 }

@@ -25,11 +25,13 @@ public class Entity {
 
     private List<Attribute> attributes = new LinkedList<>();
 
-    private String idAttributeName = "Id";
+    public static final String ID_ATTRIBUTE_NAME_SUFFIX = "Id";
+    private String idAttributeName = ID_ATTRIBUTE_NAME_SUFFIX;
     private BtDomainId idAttributeType = new BtInt32Id();
 
     private boolean hasNameAttribute = false;
-    private String nameAttributeName = "Name";
+    public static final String NAME_ATTRIBUTE_NAME_SUFFIX = "Name";
+    private String nameAttributeName = NAME_ATTRIBUTE_NAME_SUFFIX;
     private BtDomainChar nameAttributeType = new BtString50();
 
     private boolean isTree = false;
@@ -55,25 +57,29 @@ public class Entity {
     }
     public void setName(String name) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
-        if (this.name.equalsIgnoreCase(name))
+        if (withName(name))
             return;
-        checkEntityName(name);
+
+        String idAttributeName = name.concat(ID_ATTRIBUTE_NAME_SUFFIX);
+        String nameAttributeName = name.concat(NAME_ATTRIBUTE_NAME_SUFFIX);
+
+        Preconditions.checkArgument(!owner.hasEntity(name), "entity name %s already exists", name);
+        Preconditions.checkArgument(!hasAttribute(idAttributeName), "reserved attribute name %s already exists", idAttributeName);
+        Preconditions.checkArgument(!hasAttribute(nameAttributeName), "reserved attribute name %s already exists", nameAttributeName);
+
         this.name = name;
-        idAttributeName = name.concat("Id");
-        nameAttributeName = name.concat("Name");
+        this.idAttributeName = idAttributeName;
+        this.nameAttributeName = nameAttributeName;
     }
     public String getDescription() {
         return description;
     }
     public void setDescription(String description) {
-        this.description = Preconditions.checkNotNull(description);
+        this.description = description;
     }
 
     public List<Attribute> getAttributes() {
         return Collections.unmodifiableList(attributes);
-    }
-    public Attribute getAttribute(String attributeName) {
-        return Iterables.find(attributes, attribute -> attribute.getName().equalsIgnoreCase(attributeName), null);
     }
 
     public String getIdAttributeName() {
@@ -118,27 +124,27 @@ public class Entity {
     public int getSequenceType() {
         return sequenceType;
     }
-    public Attribute getSequenceGroupAttribute() {
-        return sequenceGroupAttribute;
-    }
-    public void setSequenceTypeSingle() {
+    public void setSequenceTypeToSingle() {
         this.sequenceType = SEQUENCE_TYPE_SINGLE;
     }
-    public void setSequenceTypeByGroup(Attribute sequenceGroupAttribute) {
+    public void setSequenceTypeToByGroup(Attribute sequenceGroupAttribute) {
         Preconditions.checkNotNull(sequenceGroupAttribute);
         Preconditions.checkArgument(sequenceGroupAttribute.belongsTo(this), "sequence group attribute should belong to this entity");
         this.sequenceType = SEQUENCE_TYPE_BY_GROUP;
         this.sequenceGroupAttribute = sequenceGroupAttribute;
     }
-    public void setSequenceTypeByGroup(String sequenceGroupAttributeName) {
+    public void setSequenceTypeToByGroup(String sequenceGroupAttributeName) {
         Preconditions.checkNotNull(sequenceGroupAttributeName);
-        Attribute sequenceGroupAttribute = getAttribute(sequenceGroupAttributeName);
+        Attribute sequenceGroupAttribute = findAttribute(sequenceGroupAttributeName);
         Preconditions.checkArgument(sequenceGroupAttribute != null, "can't find sequence group attribute name: %s", sequenceGroupAttributeName);
         this.sequenceType = SEQUENCE_TYPE_BY_GROUP;
         this.sequenceGroupAttribute = sequenceGroupAttribute;
     }
-    public void setSequenceTypeInTree() {
+    public void setSequenceTypeToInTree() {
         this.sequenceType = SEQUENCE_TYPE_IN_TREE;
+    }
+    public Attribute getSequenceGroupAttribute() {
+        return sequenceGroupAttribute;
     }
 
     Entity(Model owner, String name) {
@@ -146,10 +152,20 @@ public class Entity {
         setName(name);
     }
 
-    void checkEntityName(String entityName) {
-        Preconditions.checkArgument(owner.getEntity(entityName) == null, "entity name %s already exists", entityName);
-        Preconditions.checkArgument(getAttribute(entityName.concat("Id")) == null, "reserved attribute name %s already exists", entityName.concat("Id"));
-        Preconditions.checkArgument(getAttribute(entityName.concat("Name")) == null, "reserved attribute name %s already exists", entityName.concat("Name"));
+    public boolean withName(String name) {
+        return getName().equalsIgnoreCase(name);
+    }
+
+    public Attribute findAttribute(String attributeName) {
+        return Iterables.find(attributes, attribute -> attribute.withName(attributeName), null);
+    }
+
+    public boolean hasAttribute(String attributeName) {
+        return Iterables.any(attributes, attribute -> attribute.withName(attributeName));
+    }
+
+    public boolean belongsTo(Model model) {
+        return owner.equals(model);
     }
 
     public boolean inSameModel(Entity entity) {
@@ -157,11 +173,7 @@ public class Entity {
     }
 
     public boolean inSameModel(Attribute attribute) {
-        return owner.equals(attribute.getOwner().owner);
-    }
-
-    public boolean belongsTo(Model model) {
-        return owner.equals(model);
+        return owner.equals(attribute.getModel());
     }
 
     public Attribute newAttribute(String attributeName) {

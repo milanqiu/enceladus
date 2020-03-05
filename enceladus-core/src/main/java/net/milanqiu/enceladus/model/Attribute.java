@@ -14,9 +14,10 @@ public class Attribute {
 
     private Entity owner;
     private String name = "";
+    private String description = "";
+
     private DataType type = new BtInt32();
     private boolean nullable = true;
-    private String description = "";
 
     private Reference reference = null;
 
@@ -31,11 +32,25 @@ public class Attribute {
     }
     public void setName(String name) {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
-        if (this.name.equalsIgnoreCase(name))
+        if (withName(name))
             return;
-        checkAttributeName(name);
+
+        Preconditions.checkArgument(!owner.hasAttribute(name), "attribute name %s already exists", name);
+        Preconditions.checkArgument(!name.equalsIgnoreCase(owner.getIdAttributeName()),    "attribute name %s is reserved", owner.getIdAttributeName());
+        Preconditions.checkArgument(!name.equalsIgnoreCase(owner.getNameAttributeName()),  "attribute name %s is reserved", owner.getNameAttributeName());
+        Preconditions.checkArgument(!name.equalsIgnoreCase(Entity.PARENT_ATTRIBUTE_NAME),  "attribute name %s is reserved", Entity.PARENT_ATTRIBUTE_NAME);
+        Preconditions.checkArgument(!name.equalsIgnoreCase(Entity.LEVEL_ATTRIBUTE_NAME),   "attribute name %s is reserved", Entity.LEVEL_ATTRIBUTE_NAME);
+        Preconditions.checkArgument(!name.equalsIgnoreCase(Entity.ORDINAL_ATTRIBUTE_NAME), "attribute name %s is reserved", Entity.ORDINAL_ATTRIBUTE_NAME);
+
         this.name = name;
     }
+    public String getDescription() {
+        return description;
+    }
+    public void setDescription(String description) {
+        this.description = Preconditions.checkNotNull(description);
+    }
+
     public DataType getType() {
         return type;
     }
@@ -48,39 +63,37 @@ public class Attribute {
     public void setNullable(boolean nullable) {
         this.nullable = nullable;
     }
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = Preconditions.checkNotNull(description);
-    }
 
     public Reference getReference() {
         return reference;
     }
-    public void setReference(Entity refEntity) {
-        if (reference == null)
-            reference = new Reference(this, refEntity);
-        else
-            reference.set(refEntity);
+    public void setIdTypeReference(Entity refEntity) {
+        if (reference == null) {
+            reference = Reference.createIdType(this, refEntity);
+        } else {
+            reference.updateToIdType(refEntity);
+        }
     }
-    public void setReference(String refEntityName) {
-        if (reference == null)
-            reference = new Reference(this, refEntityName);
-        else
-            reference.set(refEntityName);
+    public void setIdTypeReference(String refEntityName) {
+        if (reference == null) {
+            reference = Reference.createIdType(this, refEntityName);
+        } else {
+            reference.updateToIdType(refEntityName);
+        }
     }
-    public void setReference(Entity refEntity, Attribute refAttribute) {
-        if (reference == null)
-            reference = new Reference(this, refEntity, refAttribute);
-        else
-            reference.set(refEntity, refAttribute);
+    public void setOtherTypeReference(Entity refEntity, Attribute refAttribute) {
+        if (reference == null) {
+            reference = Reference.createOtherType(this, refEntity, refAttribute);
+        } else {
+            reference.updateToOtherType(refEntity, refAttribute);
+        }
     }
-    public void setReference(String refEntityName, String refAttributeName) {
-        if (reference == null)
-            reference = new Reference(this, refEntityName, refAttributeName);
-        else
-            reference.set(refEntityName, refAttributeName);
+    public void setOtherTypeReference(String refEntityName, String refAttributeName) {
+        if (reference == null) {
+            reference = Reference.createOtherType(this, refEntityName, refAttributeName);
+        } else {
+            reference.updateToOtherType(refEntityName, refAttributeName);
+        }
     }
 
     Attribute(Entity owner, String name) {
@@ -88,30 +101,12 @@ public class Attribute {
         setName(name);
     }
 
-    void checkAttributeName(String attributeName) {
-        Preconditions.checkArgument(owner.getAttribute(attributeName) == null, "attribute name %s already exists", attributeName);
-
-        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getIdAttributeName()),    "attribute name %s is reserved", owner.getIdAttributeName());
-        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(owner.getNameAttributeName()),  "attribute name %s is reserved", owner.getNameAttributeName());
-        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.PARENT_ATTRIBUTE_NAME),  "attribute name %s is reserved", Entity.PARENT_ATTRIBUTE_NAME);
-        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.LEVEL_ATTRIBUTE_NAME),   "attribute name %s is reserved", Entity.LEVEL_ATTRIBUTE_NAME);
-        Preconditions.checkArgument(!attributeName.equalsIgnoreCase(Entity.ORDINAL_ATTRIBUTE_NAME), "attribute name %s is reserved", Entity.ORDINAL_ATTRIBUTE_NAME);
+    public boolean withName(String name) {
+        return getName().equalsIgnoreCase(name);
     }
 
     public Model getModel() {
         return owner.getOwner();
-    }
-
-    public boolean inSameModel(Entity entity) {
-        return owner.getOwner().equals(entity.getOwner());
-    }
-
-    public boolean inSameModel(Attribute attribute) {
-        return owner.getOwner().equals(attribute.owner.getOwner());
-    }
-
-    public boolean inSameEntity(Attribute attribute) {
-        return owner.equals(attribute.owner);
     }
 
     public boolean belongsTo(Model model) {
@@ -120,6 +115,18 @@ public class Attribute {
 
     public boolean belongsTo(Entity entity) {
         return owner.equals(entity);
+    }
+
+    public boolean inSameModel(Entity entity) {
+        return owner.getOwner().equals(entity.getOwner());
+    }
+
+    public boolean inSameModel(Attribute attribute) {
+        return owner.getOwner().equals(attribute.getModel());
+    }
+
+    public boolean inSameEntity(Attribute attribute) {
+        return owner.equals(attribute.owner);
     }
 
     public void deleteReference() {

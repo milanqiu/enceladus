@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * <p>
  * Creation Date: 2018-09-13
  * @author Milan Qiu
  */
@@ -18,144 +17,161 @@ public class AttributeTest {
     public void setUp() throws Exception {
         model = new Model();
         model.newEntity("e1");
-        model.getEntity("e1").newAttribute("a1");
-        model.getEntity("e1").newAttribute("a2");
+        model.findEntity("e1").newAttribute("a1");
+        model.findEntity("e1").newAttribute("a2");
         model.newEntity("e2");
-        model.getEntity("e2").newAttribute("a1");
-        model.getEntity("e2").newAttribute("a3");
+        model.findEntity("e2").newAttribute("a1");
+        model.findEntity("e2").newAttribute("a3");
     }
 
     @Test
     public void test_setName() throws Exception {
-        Attribute attribute = model.getEntity("e1").getAttribute("a2");
-        attribute.setName("a4");
-        Assert.assertEquals("a4", attribute.getName());
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+        Assert.assertEquals("a2", attribute.getName());
+
         attribute.setName("a3");
         Assert.assertEquals("a3", attribute.getName());
-        attribute.setName("a3");
+        attribute.setName("A3");
         Assert.assertEquals("a3", attribute.getName());
 
         AssertExt.assertExceptionThrown(() -> attribute.setName("A1"),
                 IllegalArgumentException.class, "attribute name A1 already exists");
-
-        AssertExt.assertExceptionThrown(() -> attribute.setName("e1id"),
+        AssertExt.assertExceptionThrown(() -> attribute.setName("e1Id"),
                 IllegalArgumentException.class, "attribute name e1Id is reserved");
-        AssertExt.assertExceptionThrown(() -> attribute.setName("e1name"),
+        AssertExt.assertExceptionThrown(() -> attribute.setName("E1name"),
                 IllegalArgumentException.class, "attribute name e1Name is reserved");
-        AssertExt.assertExceptionThrown(() -> attribute.setName("parentid"),
-                IllegalArgumentException.class, "attribute name ParentId is reserved");
-        AssertExt.assertExceptionThrown(() -> attribute.setName("treelevel"),
-                IllegalArgumentException.class, "attribute name TreeLevel is reserved");
         AssertExt.assertExceptionThrown(() -> attribute.setName("ordinal"),
                 IllegalArgumentException.class, "attribute name Ordinal is reserved");
     }
 
     @Test
-    public void test_setReference_deleteReference() throws Exception {
-        Attribute attribute = model.getEntity("e1").getAttribute("a1");
-        Entity refEntity2 = model.getEntity("e2");
-        Attribute refAttribute2 = model.getEntity("e2").getAttribute("a1");
-        Entity refEntity3 = model.newEntity("e3");
-        Attribute refAttribute3 = model.getEntity("e3").newAttribute("a1");
-        Entity refEntityWild = new Model().newEntity("e1");
-
+    public void test_setIdTypeReference() throws Exception {
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+        Entity refEntity = model.findEntity("e2");
         Assert.assertNull(attribute.getReference());
 
-        // void setReference(Entity refEntity)
-        attribute.setReference(refEntity2);
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity2, attribute.getReference().getRefEntity());
-        Assert.assertEquals(null, attribute.getReference().getRefAttribute());
+        // void setIdTypeReference(Entity refEntity)
+        {
+            attribute.setIdTypeReference(refEntity);
+            Reference reference = attribute.getReference();
+            Assert.assertEquals(attribute, reference.getOwner());
+            Assert.assertEquals("",        reference.getDescription());
+            Assert.assertEquals(refEntity, reference.getRefEntity());
+            Assert.assertEquals(Reference.REFERENCE_TYPE_ID, reference.getType());
+            Assert.assertEquals(null,      reference.getRefAttribute());
 
-        attribute.setReference(refEntity3);
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity3, attribute.getReference().getRefEntity());
-        Assert.assertEquals(null, attribute.getReference().getRefAttribute());
+            AssertExt.assertExceptionThrown(() -> attribute.setIdTypeReference(new Model().newEntity("e1")),
+                    IllegalArgumentException.class, "reference entity should be in same model");
+            AssertExt.assertExceptionThrown(() -> attribute.setIdTypeReference(attribute.getOwner()),
+                    IllegalArgumentException.class, "reference entity should not be owner");
+        }
 
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference(refEntityWild); },
-                IllegalArgumentException.class, "reference entity should be in same model");
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference(attribute.getOwner()); },
-                IllegalArgumentException.class, "reference entity equals to owner entity");
+        // void setIdTypeReference(String refEntityName)
+        {
+            attribute.setIdTypeReference("E2");
+            Reference reference = attribute.getReference();
+            Assert.assertEquals(attribute, reference.getOwner());
+            Assert.assertEquals("",        reference.getDescription());
+            Assert.assertEquals(refEntity, reference.getRefEntity());
+            Assert.assertEquals(Reference.REFERENCE_TYPE_ID, reference.getType());
+            Assert.assertEquals(null,      reference.getRefAttribute());
 
-        // void deleteReference()
-        attribute.deleteReference();
+            AssertExt.assertExceptionThrown(() -> attribute.setIdTypeReference("e3"),
+                    IllegalArgumentException.class, "can't find reference entity name: e3");
+            AssertExt.assertExceptionThrown(() -> attribute.setIdTypeReference("e1"),
+                    IllegalArgumentException.class, "reference entity should not be owner");
+        }
+    }
+
+    @Test
+    public void test_setOtherTypeReference() throws Exception {
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+        Entity refEntity = model.findEntity("e2");
         Assert.assertNull(attribute.getReference());
 
-        // void setReference(String refEntityName)
-        attribute.setReference("e2");
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity2, attribute.getReference().getRefEntity());
-        Assert.assertEquals(null, attribute.getReference().getRefAttribute());
+        // void setOtherTypeReference(Entity refEntity, Attribute refAttribute)
+        {
+            attribute.setOtherTypeReference(refEntity, refEntity.findAttribute("a3"));
+            Reference reference = attribute.getReference();
+            Assert.assertEquals(attribute, reference.getOwner());
+            Assert.assertEquals("",        reference.getDescription());
+            Assert.assertEquals(refEntity, reference.getRefEntity());
+            Assert.assertEquals(Reference.REFERENCE_TYPE_OTHER, reference.getType());
+            Assert.assertEquals(refEntity.findAttribute("a3"),  reference.getRefAttribute());
 
-        attribute.setReference("e3");
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity3, attribute.getReference().getRefEntity());
-        Assert.assertEquals(null, attribute.getReference().getRefAttribute());
+            AssertExt.assertExceptionThrown(() -> attribute.setOtherTypeReference(new Model().newEntity("e1"), refEntity.findAttribute("a3")),
+                    IllegalArgumentException.class, "reference entity should be in same model");
+            AssertExt.assertExceptionThrown(() -> attribute.setOtherTypeReference(attribute.getOwner(), attribute.getOwner().findAttribute("a1")),
+                    IllegalArgumentException.class, "reference entity should not be owner");
 
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference("e0"); },
-                IllegalArgumentException.class, "can't find reference entity name: e0");
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference("e1"); },
-                IllegalArgumentException.class, "reference entity equals to owner entity");
+            AssertExt.assertExceptionThrown(() -> attribute.setOtherTypeReference(refEntity, attribute.getOwner().findAttribute("a1")),
+                    IllegalArgumentException.class, "reference attribute should belongs to reference entity");
+        }
 
-        // void deleteReference()
-        attribute.deleteReference();
-        Assert.assertNull(attribute.getReference());
+        // void setOtherTypeReference(String refEntityName, String refAttributeName)
+        {
+            attribute.setOtherTypeReference("E2", "A3");
+            Reference reference = attribute.getReference();
+            Assert.assertEquals(attribute, reference.getOwner());
+            Assert.assertEquals("",        reference.getDescription());
+            Assert.assertEquals(refEntity, reference.getRefEntity());
+            Assert.assertEquals(Reference.REFERENCE_TYPE_OTHER, reference.getType());
+            Assert.assertEquals(refEntity.findAttribute("a3"),  reference.getRefAttribute());
 
-        // void setReference(Entity refEntity, Attribute refAttribute)
-        attribute.setReference(refEntity2, refAttribute2);
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity2, attribute.getReference().getRefEntity());
-        Assert.assertEquals(refAttribute2, attribute.getReference().getRefAttribute());
+            AssertExt.assertExceptionThrown(() -> attribute.setOtherTypeReference("e3", "a1"),
+                    IllegalArgumentException.class, "can't find reference entity name: e3");
+            AssertExt.assertExceptionThrown(() -> attribute.setOtherTypeReference("e1", "a1"),
+                    IllegalArgumentException.class, "reference entity should not be owner");
 
-        attribute.setReference(refEntity3, refAttribute3);
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity3, attribute.getReference().getRefEntity());
-        Assert.assertEquals(refAttribute3, attribute.getReference().getRefAttribute());
+            AssertExt.assertExceptionThrown(() -> attribute.setOtherTypeReference("e2", "a4"),
+                    IllegalArgumentException.class, "can't find reference attribute name: a4");
+        }
+    }
 
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference(refEntityWild, refAttribute3); },
-                IllegalArgumentException.class, "reference entity should be in same model");
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference(attribute.getOwner(), refAttribute3); },
-                IllegalArgumentException.class, "reference entity equals to owner entity");
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference(refEntity2, refAttribute3); },
-                IllegalArgumentException.class, "reference attribute should belongs to reference entity");
+    @Test
+    public void test_withName() throws Exception {
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+        Assert.assertTrue(attribute.withName("a2"));
+        Assert.assertTrue(attribute.withName("A2"));
+        Assert.assertFalse(attribute.withName("a3"));
+    }
 
-        // void deleteReference()
-        attribute.deleteReference();
-        Assert.assertNull(attribute.getReference());
+    @Test
+    public void test_getModel() throws Exception {
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+        Assert.assertEquals(model, attribute.getModel());
+    }
 
-        // void setReference(String refEntityName, String refAttributeName)
-        attribute.setReference("e2", "a1");
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity2, attribute.getReference().getRefEntity());
-        Assert.assertEquals(refAttribute2, attribute.getReference().getRefAttribute());
+    @Test
+    public void test_belongsTo() throws Exception {
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
 
-        attribute.setReference("e3", "a1");
-        Assert.assertEquals(attribute, attribute.getReference().getOwner());
-        Assert.assertEquals(refEntity3, attribute.getReference().getRefEntity());
-        Assert.assertEquals(refAttribute3, attribute.getReference().getRefAttribute());
+        // boolean belongsTo(Model model)
+        Assert.assertTrue(attribute.belongsTo(model));
+        Assert.assertFalse(attribute.belongsTo(new Model()));
 
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference("e0", "a1"); },
-                IllegalArgumentException.class, "can't find reference entity name: e0");
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference("e1", "a1"); },
-                IllegalArgumentException.class, "reference entity equals to owner entity");
-        AssertExt.assertExceptionThrown(() -> { attribute.setReference("e2", "a0"); },
-                IllegalArgumentException.class, "can't find reference attribute name: a0");
+        // boolean belongsTo(Entity entity)
+        Assert.assertTrue(attribute.belongsTo(model.findEntity("e1")));
+        Assert.assertFalse(attribute.belongsTo(model.findEntity("e2")));
     }
 
     @Test
     public void test_inSameModel() throws Exception {
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+
         // boolean inSameModel(Entity entity)
-        Assert.assertTrue(model.getEntity("e1").getAttribute("a1").inSameModel(model.getEntity("e2")));
-        Assert.assertFalse(model.getEntity("e1").getAttribute("a1").inSameModel(new Model().newEntity("e1")));
+        Assert.assertTrue(attribute.inSameModel(model.findEntity("e2")));
+        Assert.assertFalse(attribute.inSameModel(new Model().newEntity("e1")));
 
         // boolean inSameModel(Attribute attribute)
-        Assert.assertTrue(model.getEntity("e1").getAttribute("a1").inSameModel(model.getEntity("e2").getAttribute("a3")));
-        Assert.assertFalse(model.getEntity("e1").getAttribute("a1").inSameModel(new Model().newEntity("e1").newAttribute("a1")));
+        Assert.assertTrue(attribute.inSameModel(model.findEntity("e2").findAttribute("a3")));
+        Assert.assertFalse(attribute.inSameModel(new Model().newEntity("e1").newAttribute("a1")));
     }
 
     @Test
     public void test_inSameEntity() throws Exception {
-        Assert.assertTrue(model.getEntity("e1").getAttribute("a1").inSameEntity(model.getEntity("e1").getAttribute("a2")));
-        Assert.assertFalse(model.getEntity("e1").getAttribute("a1").inSameEntity(model.getEntity("e2").getAttribute("a1")));
+        Attribute attribute = model.findEntity("e1").findAttribute("a2");
+        Assert.assertTrue(attribute.inSameEntity(model.findEntity("e1").findAttribute("a1")));
+        Assert.assertFalse(attribute.inSameEntity(model.findEntity("e2").findAttribute("a1")));
     }
 }
