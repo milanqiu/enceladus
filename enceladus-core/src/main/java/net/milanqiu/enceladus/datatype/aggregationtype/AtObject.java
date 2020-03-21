@@ -39,8 +39,9 @@ public class AtObject extends AggregationType {
             StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append("(");
             while (itr.hasNext()) {
                 Map.Entry<String, DataType> element = itr.next();
-                sb.append(element.getKey())
-                        .append(":")
+                sb.append("\"")
+                        .append(element.getKey())
+                        .append("\":")
                         .append(element.getValue());
                 if (itr.hasNext())
                     sb.append(",");
