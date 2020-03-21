@@ -64,9 +64,9 @@ public class CollectionTypesBaseTest {
 
         // misc
         LinkedHashMap<String, DataType> properties = new LinkedHashMap<>();
-        properties.put("1", new BtInt32());
-        properties.put("2", new CtArray(new BtString(20)));
-        Assert.assertEquals("CtMap(CtMap(BtString(20),CtList(CtMap(BtDateTime,BtPercent(10,2)))),CtMap(BtInt32,AtBundle(\"1\":BtInt32,\"2\":CtArray(BtString(20)))))",
+        properties.put("p1", new BtInt32());
+        properties.put("p2", new CtArray(new BtString(20)));
+        Assert.assertEquals("CtMap(CtMap(BtString(20),CtList(CtMap(BtDateTime,BtPercent(10,2)))),CtMap(BtInt32,AtBundle(\"p1\":BtInt32,\"p2\":CtArray(BtString(20)))))",
                 new CtMap(new CtMap(new BtString(20), new CtList(new CtMap(new BtDateTime(), new BtPercent(10,2)))),
                           new CtMap(new BtInt32(), new AtBundle(properties)))
                         .toString());

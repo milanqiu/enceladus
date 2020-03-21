@@ -34,21 +34,21 @@ public class AggregationTypesBaseTest {
     @Before
     public void setUp() throws Exception {
         propertiesA = new LinkedHashMap<>();
-        propertiesA.put("1", new BtString(20));
-        propertiesA.put("2", new BtInt32());
+        propertiesA.put("p1", new BtString(20));
+        propertiesA.put("p2", new BtInt32());
 
         propertiesB = new LinkedHashMap<>();
-        propertiesB.put("1", new BtString20());
-        propertiesB.put("2", new BtInt32());
+        propertiesB.put("p1", new BtString20());
+        propertiesB.put("p2", new BtInt32());
 
         propertiesC = new LinkedHashMap<>();
-        propertiesC.put("1", new BtString(30));
-        propertiesC.put("2", new BtInt32());
+        propertiesC.put("p1", new BtString(30));
+        propertiesC.put("p2", new BtInt32());
 
         propertiesD = new LinkedHashMap<>();
-        propertiesD.put("1", new BtString(20));
-        propertiesD.put("2", new BtInt32());
-        propertiesD.put("3", new BtInt32());
+        propertiesD.put("p1", new BtString(20));
+        propertiesD.put("p2", new BtInt32());
+        propertiesD.put("p3", new BtInt32());
 
         propertiesBA = new LinkedHashMap<>();
         propertiesBA.put("nested", new AtBundle(propertiesA));
@@ -114,15 +114,15 @@ public class AggregationTypesBaseTest {
     @Test
     public void test_toString() throws Exception {
         // AtBundle
-        Assert.assertEquals("AtBundle(\"1\":BtString(20),\"2\":BtInt32)", new AtBundle(propertiesA).toString());
-        Assert.assertEquals("AtBundle(\"nested\":AtBundle(\"1\":BtString(20),\"2\":BtInt32))", new AtBundle(propertiesBA).toString());
+        Assert.assertEquals("AtBundle(\"p1\":BtString(20),\"p2\":BtInt32)", new AtBundle(propertiesA).toString());
+        Assert.assertEquals("AtBundle(\"nested\":AtBundle(\"p1\":BtString(20),\"p2\":BtInt32))", new AtBundle(propertiesBA).toString());
 
         // AtObject
-        Assert.assertEquals("AtObject(\"1\":BtString(20),\"2\":BtInt32)", new AtObject(propertiesA).toString());
-        Assert.assertEquals("AtObject(\"nested\":AtObject(\"1\":BtString(20),\"2\":BtInt32))", new AtObject(propertiesOA).toString());
+        Assert.assertEquals("AtObject(\"p1\":BtString(20),\"p2\":BtInt32)", new AtObject(propertiesA).toString());
+        Assert.assertEquals("AtObject(\"nested\":AtObject(\"p1\":BtString(20),\"p2\":BtInt32))", new AtObject(propertiesOA).toString());
 
         // misc
-        Assert.assertEquals("AtObject(\"nested1\":AtObject(\"nested\":AtBundle(\"1\":BtString(20),\"2\":BtInt32)),\"nested2\":AtBundle(\"nested\":AtObject(\"1\":BtString20,\"2\":BtInt32)),\"nested3\":CtMap(AtObject(\"nested\":AtBundle(\"1\":BtString(20),\"2\":BtInt32)),AtBundle(\"nested\":AtObject(\"1\":BtString20,\"2\":BtInt32))))",
+        Assert.assertEquals("AtObject(\"nested1\":AtObject(\"nested\":AtBundle(\"p1\":BtString(20),\"p2\":BtInt32)),\"nested2\":AtBundle(\"nested\":AtObject(\"p1\":BtString20,\"p2\":BtInt32)),\"nested3\":CtMap(AtObject(\"nested\":AtBundle(\"p1\":BtString(20),\"p2\":BtInt32)),AtBundle(\"nested\":AtObject(\"p1\":BtString20,\"p2\":BtInt32))))",
                 new AtObject(propertiesComplicated).toString());
     }
 }
