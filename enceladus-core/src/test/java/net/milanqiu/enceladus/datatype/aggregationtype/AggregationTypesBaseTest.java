@@ -4,6 +4,7 @@ import net.milanqiu.enceladus.datatype.DataType;
 import net.milanqiu.enceladus.datatype.basictype.BtInt32;
 import net.milanqiu.enceladus.datatype.basictype.BtString;
 import net.milanqiu.enceladus.datatype.basictype.specialized.BtString20;
+import net.milanqiu.enceladus.datatype.collectiontype.CtMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,7 @@ public class AggregationTypesBaseTest {
     private LinkedHashMap<String, DataType> propertiesOB;
     private LinkedHashMap<String, DataType> propertiesOC;
     private LinkedHashMap<String, DataType> propertiesOD;
+    private LinkedHashMap<String, DataType> propertiesComplicated;
 
     @Before
     public void setUp() throws Exception {
@@ -71,6 +73,11 @@ public class AggregationTypesBaseTest {
 
         propertiesOD = new LinkedHashMap<>();
         propertiesOD.put("nested", new AtObject(propertiesD));
+
+        propertiesComplicated = new LinkedHashMap<>();
+        propertiesComplicated.put("nested1", new AtObject(propertiesBA));
+        propertiesComplicated.put("nested2", new AtBundle(propertiesOB));
+        propertiesComplicated.put("nested3", new CtMap(new AtObject(propertiesBA), new AtBundle(propertiesOB)));
     }
 
     @Test
@@ -113,5 +120,9 @@ public class AggregationTypesBaseTest {
         // AtObject
         Assert.assertEquals("AtObject(1:BtString(20),2:BtInt32)", new AtObject(propertiesA).toString());
         Assert.assertEquals("AtObject(nested:AtObject(1:BtString(20),2:BtInt32))", new AtObject(propertiesOA).toString());
+
+        // misc
+        Assert.assertEquals("AtObject(nested1:AtObject(nested:AtBundle(1:BtString(20),2:BtInt32)),nested2:AtBundle(nested:AtObject(1:BtString20,2:BtInt32)),nested3:CtMap(AtObject(nested:AtBundle(1:BtString(20),2:BtInt32)),AtBundle(nested:AtObject(1:BtString20,2:BtInt32))))",
+                new AtObject(propertiesComplicated).toString());
     }
 }
