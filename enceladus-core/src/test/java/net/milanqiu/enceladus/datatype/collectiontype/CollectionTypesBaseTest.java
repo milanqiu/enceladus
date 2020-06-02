@@ -66,9 +66,35 @@ public class CollectionTypesBaseTest {
         LinkedHashMap<String, DataType> properties = new LinkedHashMap<>();
         properties.put("p1", new BtInt32());
         properties.put("p2", new CtArray(new BtString(20)));
-        Assert.assertEquals("CtMap(CtMap(BtString(20),CtList(CtMap(BtDateTime,BtPercent(10,2)))),CtMap(BtInt32,AtBundle(\"p1\":BtInt32,\"p2\":CtArray(BtString(20)))))",
+        Assert.assertEquals("CtMap(CtMap(BtString(20),CtList(CtMap(BtDateTime,BtPercent(10,2)))),CtMap(BtInt32,AtBundle({\"p1\":BtInt32,\"p2\":CtArray(BtString(20))})))",
                 new CtMap(new CtMap(new BtString(20), new CtList(new CtMap(new BtDateTime(), new BtPercent(10,2)))),
                           new CtMap(new BtInt32(), new AtBundle(properties)))
                         .toString());
+    }
+
+    @Test
+    public void test_fromString() throws Exception {
+        // CtArray
+        Assert.assertEquals(new CtArray(new BtString(20)), DataType.fromString("CtArray(BtString(20))"));
+        Assert.assertEquals(new CtArray(new CtArray(new BtString(20))), DataType.fromString("CtArray(CtArray(BtString(20)))"));
+
+        // CtList
+        Assert.assertEquals(new CtList(new BtString(20)), DataType.fromString("CtList(BtString(20))"));
+        Assert.assertEquals(new CtList(new CtList(new BtString(20))), DataType.fromString("CtList(CtList(BtString(20)))"));
+
+        // CtMap
+        Assert.assertEquals(new CtMap(new BtString(20), new BtInt32()), DataType.fromString("CtMap(BtString(20),BtInt32)"));
+        Assert.assertEquals(new CtMap(new CtMap(new BtString(20), new BtInt32()), new BtInt32()), DataType.fromString("CtMap(CtMap(BtString(20),BtInt32),BtInt32)"));
+
+        // misc
+        LinkedHashMap<String, DataType> properties = new LinkedHashMap<>();
+        properties.put("p1", new BtInt32());
+        properties.put("p2", new CtArray(new BtString(20)));
+        Assert.assertEquals(new CtMap(new CtMap(new BtString(20), new CtList(new CtMap(new BtDateTime(), new BtPercent(10,2)))),
+                                      new CtMap(new BtInt32(), new AtBundle(properties))),
+                DataType.fromString("CtMap(CtMap(BtString(20),CtList(CtMap(BtDateTime,BtPercent(10,2)))),CtMap(BtInt32,AtBundle({\"p1\":BtInt32,\"p2\":CtArray(BtString(20))})))"));
+
+        // skip spaces and tabs
+        Assert.assertEquals(new CtMap(new BtString(20), new BtInt32()), DataType.fromString("CtMap(   BtString(20),\tBtInt32)"));
     }
 }

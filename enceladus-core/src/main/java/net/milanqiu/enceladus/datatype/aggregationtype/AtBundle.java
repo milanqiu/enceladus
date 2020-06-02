@@ -36,7 +36,7 @@ public class AtBundle extends AggregationType {
     protected String toStringCustom() {
         Iterator<Map.Entry<String, DataType>> itr = properties.entrySet().iterator();
         if (itr.hasNext()) {
-            StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append("(");
+            StringBuilder sb = new StringBuilder(getClass().getSimpleName()).append("({");
             while (itr.hasNext()) {
                 Map.Entry<String, DataType> element = itr.next();
                 sb.append("\"")
@@ -46,7 +46,7 @@ public class AtBundle extends AggregationType {
                 if (itr.hasNext())
                     sb.append(",");
             }
-            sb.append(")");
+            sb.append("})");
             return sb.toString();
         } else {
             return getClass().getSimpleName() + "()";

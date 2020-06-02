@@ -114,15 +114,33 @@ public class AggregationTypesBaseTest {
     @Test
     public void test_toString() throws Exception {
         // AtBundle
-        Assert.assertEquals("AtBundle(\"p1\":BtString(20),\"p2\":BtInt32)", new AtBundle(propertiesA).toString());
-        Assert.assertEquals("AtBundle(\"nested\":AtBundle(\"p1\":BtString(20),\"p2\":BtInt32))", new AtBundle(propertiesBA).toString());
+        Assert.assertEquals("AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})", new AtBundle(propertiesA).toString());
+        Assert.assertEquals("AtBundle({\"nested\":AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})})", new AtBundle(propertiesBA).toString());
 
         // AtObject
-        Assert.assertEquals("AtObject(\"p1\":BtString(20),\"p2\":BtInt32)", new AtObject(propertiesA).toString());
-        Assert.assertEquals("AtObject(\"nested\":AtObject(\"p1\":BtString(20),\"p2\":BtInt32))", new AtObject(propertiesOA).toString());
+        Assert.assertEquals("AtObject({\"p1\":BtString(20),\"p2\":BtInt32})", new AtObject(propertiesA).toString());
+        Assert.assertEquals("AtObject({\"nested\":AtObject({\"p1\":BtString(20),\"p2\":BtInt32})})", new AtObject(propertiesOA).toString());
 
         // misc
-        Assert.assertEquals("AtObject(\"nested1\":AtObject(\"nested\":AtBundle(\"p1\":BtString(20),\"p2\":BtInt32)),\"nested2\":AtBundle(\"nested\":AtObject(\"p1\":BtString20,\"p2\":BtInt32)),\"nested3\":CtMap(AtObject(\"nested\":AtBundle(\"p1\":BtString(20),\"p2\":BtInt32)),AtBundle(\"nested\":AtObject(\"p1\":BtString20,\"p2\":BtInt32))))",
+        Assert.assertEquals("AtObject({\"nested1\":AtObject({\"nested\":AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})}),\"nested2\":AtBundle({\"nested\":AtObject({\"p1\":BtString20,\"p2\":BtInt32})}),\"nested3\":CtMap(AtObject({\"nested\":AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})}),AtBundle({\"nested\":AtObject({\"p1\":BtString20,\"p2\":BtInt32})}))})",
                 new AtObject(propertiesComplicated).toString());
+    }
+
+    @Test
+    public void test_fromString() throws Exception {
+        // AtBundle
+        Assert.assertEquals(new AtBundle(propertiesA), DataType.fromString("AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})"));
+        Assert.assertEquals(new AtBundle(propertiesBA), DataType.fromString("AtBundle({\"nested\":AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})})"));
+
+        // AtObject
+        Assert.assertEquals(new AtObject(propertiesA), DataType.fromString("AtObject({\"p1\":BtString(20),\"p2\":BtInt32})"));
+        Assert.assertEquals(new AtObject(propertiesOA), DataType.fromString("AtObject({\"nested\":AtObject({\"p1\":BtString(20),\"p2\":BtInt32})})"));
+
+        // misc
+        Assert.assertEquals(new AtObject(propertiesComplicated),
+                DataType.fromString("AtObject({\"nested1\":AtObject({\"nested\":AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})}),\"nested2\":AtBundle({\"nested\":AtObject({\"p1\":BtString20,\"p2\":BtInt32})}),\"nested3\":CtMap(AtObject({\"nested\":AtBundle({\"p1\":BtString(20),\"p2\":BtInt32})}),AtBundle({\"nested\":AtObject({\"p1\":BtString20,\"p2\":BtInt32})}))})"));
+
+        // skip spaces and tabs
+        Assert.assertEquals(new AtBundle(propertiesA), DataType.fromString("AtBundle\t({\"p1\":BtString(20),   \"p2\":BtInt32})"));
     }
 }
